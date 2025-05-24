@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhatsApp Web Clone</title>
+  <link rel="stylesheet" href="../../pages/home/home.css">
+  <script src="components/Sidebar/Sidebar.js"></script>
+</head>
+<body>
+
+  <div id="sidebar" class="sidebar">
+    <div class="profile-section">
+      <h2>Il Mio Profilo</h2>
+    </div>
+    <script>
+        const url = "/chats";
+        fetch(url, {
+            method : "GET",
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const sidebar = Sidebar("sidebar", data);
+        })
+    </script>
+  </div>
+
+  <div class="chat-area">
+    <div class="chat-header">
+      <h3>Contatto 1</h3>
+    </div>
+    <div class="chat-messages">
+      <div class="message received">Ciao! Come stai?</div>
+      <div class="message sent">Tutto bene, grazie! E tu?</div>
+      <div class="message received">Bene anche io!</div>
+    </div>
+  </div>
+
+</body>
+</html>

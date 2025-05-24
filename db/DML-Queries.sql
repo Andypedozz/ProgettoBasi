@@ -1,0 +1,11 @@
+INSERT INTO User ('Username','Name','Surname','Number') VALUES ('Andypedoz','Andrea','Pedini','3738729336');
+INSERT INTO Chat ('ChatName','CreationDate','Archived','ChatOwner','ChatId') VALUES ('Luke','11.09.2020',0,'Andypedoz',0);
+INSERT INTO Chat ('ChatName','CreationDate','Archived','ChatOwner','ChatId') VALUES ('Sarah','11.09.2020',0,'Andypedoz',1);
+INSERT INTO Chat ('ChatName','CreationDate','Archived','ChatOwner','ChatId') VALUES ('Lance','11.09.2020',0,'Andypedoz',2);
+INSERT INTO Chat ('ChatName','CreationDate','Archived','ChatOwner','ChatId') VALUES ('Mark','11.09.2020',0,'Andypedoz',3);
+INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime') VALUES (0,'Testo',0,0,0,'2025-05-24 14:55:59');
+INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime') VALUES (1,'Testo',0,0,1,'2025-05-24 14:54:59');
+INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime') VALUES (2,'Testo',0,0,2,'2025-05-24 14:53:59');
+INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime') VALUES (3,'Testo',0,0,3,'2025-05-24 14:52:59');
+INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime') VALUES (4,'Testo',0,0,0,'2025-05-24 14:51:59');
+INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime') VALUES (5,'Testo',0,0,1,'2025-05-24 14:50:59');
