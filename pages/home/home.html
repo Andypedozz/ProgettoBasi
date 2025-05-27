@@ -10,69 +10,102 @@
 </head>
 <body>
 
-  <div id="sidebar" class="sidebar">
-    <div class="disconnect-div">
-      <a href="/">Disconnetti</a>
-    </div>
-    <div class="profile-section">
-      <h2>Il Mio Profilo</h2>
-    </div>
-    <script>
-        // FETCH CHATS
-        const url = "/chats";
-        fetch(url, {
-            method : "GET",
-            headers : {
+    <div id="sidebar" class="sidebar">
+      <div class="disconnect-div">
+        <a href="/">Disconnetti</a>
+      </div>
+      <div class="profile-section">
+        <h2>Il Mio Profilo</h2>
+      </div>
+      <div class="selection-section">
+        <div>
+          <button id="chats-btn" onclick="fetchData('chats')">Chat</button>
+        </div>
+        <div>
+          <button id="groups-btn" onclick="fetchData('groups')">Gruppi</button>
+        </div>
+        <div>
+          <button id="calls-btn" onclick="fetchData('calls')">Chiamate</button>
+        </div>
+      </div>
+      <div id="chat-list" class="chat-list">
+
+      </div>
+      <script>
+
+          // Function to fetch chats
+          function fetchData(type) {
+            clearSidebar();
+
+            const url = "/"+type;
+            fetch(url, {
+              method : "GET",
+              headers : {
                 "Content-Type" : "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const sidebar = new Sidebar("sidebar", data);
-            sidebar.cards.forEach(card => {
-              card.addEventListener("click", (event) => {
-                openChat(sidebar, card);
+              }
+            })
+            .then(response => response.json())
+            .then(data => {
+              const sidebar = new Sidebar("chat-list",type,data);
+              
+              // Adding listeners to open single chats
+              sidebar.cards.forEach(card => {
+                card.addEventListener("click", (event) => {
+                  openChat(sidebar, card);
+                });
               });
-            });
-        })
+            })
+          }
 
-        function openChat(sidebar, card) {
-          const name = card.getElementsByTagName("h4")[0].innerText;
-          const data = sidebar.getChatData(name);
-          const url = "/chat/"+data.ChatId;
-
-          clearArea();
-          fetch(url, {
-            method : "GET",
-            headers : {
-              "Content-Type" : "application/json"
-            }
-          })
-          .then(response => response.json())
-          .then(messages => {
-            const chat = new Chat("chat-messages", messages);
-          });
-        }
-
-        function clearArea() {
-          const chatContainer = document.getElementById("chat-messages");
-
-          if(chatContainer.hasChildNodes) {
-            while(chatContainer.firstChild) {
-              chatContainer.removeChild(chatContainer.firstChild);
+          function clearSidebar() {
+            const sidebarContainer = document.getElementById("chat-list");
+            
+            if(sidebarContainer.hasChildNodes) {
+              while(sidebarContainer.firstChild) {
+                sidebarContainer.removeChild(sidebarContainer.firstChild);
+              }
             }
           }
-        }
-    </script>
-  </div>
 
-  <div id="chat-area" class="chat-area">
-    <div class="chat-header">
-      <h3>Contatto 1</h3>
+          // Function to open a chat
+          function openChat(sidebar, card) {
+            const name = card.getElementsByTagName("h4")[0].innerText;
+            const data = sidebar.getChatData(name);
+            const url = "/chat/"+data.ChatId;
+  
+            clearArea();
+            fetch(url, {
+              method : "GET",
+              headers : {
+                "Content-Type" : "application/json"
+              }
+            })
+            .then(response => response.json())
+            .then(messages => {
+              const chat = new Chat("chat-messages", messages);
+            });
+          }
+  
+          // Function to clear the current opened chat container
+          function clearArea() {
+            const chatContainer = document.getElementById("chat-messages");
+  
+            if(chatContainer.hasChildNodes) {
+              while(chatContainer.firstChild) {
+                chatContainer.removeChild(chatContainer.firstChild);
+              }
+            }
+          }
+      </script>
     </div>
-    <div id="chat-messages" class="chat-messages">
+  
+    <div id="chat-area" class="chat-area">
+      <div class="chat-header">
+        <h3>Contatto 1</h3>
+      </div>
+      <div id="chat-messages" class="chat-messages">
+      </div>
     </div>
-  </div>
 
 </body>
 </html>

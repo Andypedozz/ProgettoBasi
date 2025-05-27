@@ -1,41 +1,43 @@
 
 class Sidebar {
 
-    constructor(containerId, chatsData = []) {
+    constructor(containerId, type, data = []) {
         this.containerId = containerId;
-        this.chats = chatsData;
+        this.type = type;
+        this.data = data;
         this.cards = [];
-        this.loadChats();
+        this.loadData();
     }
 
-    loadChats() {
+    loadData() {
         const container = document.getElementById(this.containerId);
-        const chatList = document.createElement("div");
-        chatList.setAttribute("class","chat-list");
 
-        this.chats.forEach(chat => {
-            const chatDiv = document.createElement("div");
-            chatDiv.setAttribute("class", "chat-item");
-            const chatInfo = document.createElement("div");
-            chatInfo.setAttribute("class","chat-info");
+        this.data.forEach(row => {
+            const rowDiv = document.createElement("div");
+            rowDiv.setAttribute("class", "row-item");
+            const rowInfo = document.createElement("div");
+            rowInfo.setAttribute("class","row-info");
 
             const h4 = document.createElement("h4");
             const p = document.createElement("p");
-
-            h4.innerText = chat.ChatName;
-            p.innerText = chat.lastMessage;
-
-            chatInfo.appendChild(h4);
-            chatInfo.appendChild(p);
-
-            chatDiv.appendChild(chatInfo);
-            chatList.appendChild(chatDiv)
-            this.cards.push(chatDiv);
+            
+            if(this.type == "chats") {
+                h4.innerText = row.ChatName;
+            }else if(this.type == "groups") {
+                h4.innerText = row.GroupName;
+            }else{
+                h4.innerText = "Call "+row.CallId;
+            }
+            
+            rowInfo.appendChild(h4);
+            rowInfo.appendChild(p);
+            
+            rowDiv.appendChild(rowInfo);
+            container.appendChild(rowDiv)
+            this.cards.push(rowDiv);
         });
-        
-        container.appendChild(chatList);
     }
-
+    
     getChatData(name) {
         let found;
         this.chats.forEach(chat => {
@@ -44,5 +46,13 @@ class Sidebar {
             }
         })
         return found;
+    }
+
+    getGroupData() {
+
+    }
+
+    getCallData() {
+
     }
 }

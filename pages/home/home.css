@@ -21,6 +21,14 @@ body {
     border-bottom: 1px solid #ccc;
 }
 
+.selection-section {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    background-color: #ededed;
+    border-bottom: 1px solid #ccc;
+}
+
 .disconnect-div {
     padding: 15px;
     background-color: #ededed;
@@ -49,13 +57,13 @@ body {
     overflow-y: auto;
 }
 
-.chat-item {
+.row-item {
     padding: 15px;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
 }
 
-.chat-item:hover {
+.row-item:hover {
     background-color: #e6e6e6;
 }
 

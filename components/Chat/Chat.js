@@ -11,7 +11,6 @@ class Chat {
         const container = document.getElementById(this.containerId);
 
         this.messages.forEach(message => {
-            console.log(message);
             const div = document.createElement("div");
             if(message.Sent) div.setAttribute("class","message sent");
             else div.setAttribute("class","message received");
