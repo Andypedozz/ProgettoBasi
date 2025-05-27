@@ -1,3 +1,3 @@
+DELETE FROM Message;
 DELETE FROM Chat;
 DELETE FROM User;
-DELETE FROM Message;

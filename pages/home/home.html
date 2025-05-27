@@ -6,14 +6,19 @@
   <title>WhatsApp Web Clone</title>
   <link rel="stylesheet" href="../../pages/home/home.css">
   <script src="components/Sidebar/Sidebar.js"></script>
+  <script src="components/Chat/Chat.js"></script>
 </head>
 <body>
 
   <div id="sidebar" class="sidebar">
+    <div class="disconnect-div">
+      <a href="/">Disconnetti</a>
+    </div>
     <div class="profile-section">
       <h2>Il Mio Profilo</h2>
     </div>
     <script>
+        // FETCH CHATS
         const url = "/chats";
         fetch(url, {
             method : "GET",
@@ -23,19 +28,49 @@
         })
         .then(response => response.json())
         .then(data => {
-            const sidebar = Sidebar("sidebar", data);
+            const sidebar = new Sidebar("sidebar", data);
+            sidebar.cards.forEach(card => {
+              card.addEventListener("click", (event) => {
+                openChat(sidebar, card);
+              });
+            });
         })
+
+        function openChat(sidebar, card) {
+          const name = card.getElementsByTagName("h4")[0].innerText;
+          const data = sidebar.getChatData(name);
+          const url = "/chat/"+data.ChatId;
+
+          clearArea();
+          fetch(url, {
+            method : "GET",
+            headers : {
+              "Content-Type" : "application/json"
+            }
+          })
+          .then(response => response.json())
+          .then(messages => {
+            const chat = new Chat("chat-messages", messages);
+          });
+        }
+
+        function clearArea() {
+          const chatContainer = document.getElementById("chat-messages");
+
+          if(chatContainer.hasChildNodes) {
+            while(chatContainer.firstChild) {
+              chatContainer.removeChild(chatContainer.firstChild);
+            }
+          }
+        }
     </script>
   </div>
 
-  <div class="chat-area">
+  <div id="chat-area" class="chat-area">
     <div class="chat-header">
       <h3>Contatto 1</h3>
     </div>
-    <div class="chat-messages">
-      <div class="message received">Ciao! Come stai?</div>
-      <div class="message sent">Tutto bene, grazie! E tu?</div>
-      <div class="message received">Bene anche io!</div>
+    <div id="chat-messages" class="chat-messages">
     </div>
   </div>
 

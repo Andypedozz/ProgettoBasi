@@ -1,30 +1,48 @@
 
-function Sidebar(containerId, chats = []) {
-    const container = document.getElementById(containerId);
-    const chatList = document.createElement("div");
-    chatList.setAttribute("class","chat-list");
+class Sidebar {
 
-    chats.forEach(chat => {
-        const chatDiv = document.createElement("div");
-        chatDiv.setAttribute("class", "chat-item");
-        const avatarDiv = document.createElement("div");
-        avatarDiv.setAttribute("class","avatar");
-        const chatInfo = document.createElement("div");
-        chatInfo.setAttribute("class","chat-info");
+    constructor(containerId, chatsData = []) {
+        this.containerId = containerId;
+        this.chats = chatsData;
+        this.cards = [];
+        this.loadChats();
+    }
 
-        const h4 = document.createElement("h4");
-        const p = document.createElement("p");
+    loadChats() {
+        const container = document.getElementById(this.containerId);
+        const chatList = document.createElement("div");
+        chatList.setAttribute("class","chat-list");
 
-        h4.innerText = chat.ChatName;
-        p.innerText = chat.lastMessage;
+        this.chats.forEach(chat => {
+            const chatDiv = document.createElement("div");
+            chatDiv.setAttribute("class", "chat-item");
+            const chatInfo = document.createElement("div");
+            chatInfo.setAttribute("class","chat-info");
 
-        chatInfo.appendChild(h4);
-        chatInfo.appendChild(p);
+            const h4 = document.createElement("h4");
+            const p = document.createElement("p");
 
-        chatDiv.appendChild(avatarDiv);
-        chatDiv.appendChild(chatInfo);
-        chatList.appendChild(chatDiv)
-    });
-    
-    container.appendChild(chatList);
+            h4.innerText = chat.ChatName;
+            p.innerText = chat.lastMessage;
+
+            chatInfo.appendChild(h4);
+            chatInfo.appendChild(p);
+
+            chatDiv.appendChild(chatInfo);
+            chatList.appendChild(chatDiv)
+            this.cards.push(chatDiv);
+        });
+        
+        container.appendChild(chatList);
+    }
+
+    getChatData(name) {
+        let found;
+        this.chats.forEach(chat => {
+            if(chat.ChatName == name) {
+                found = chat;
+            }
+        })
+        return found;
+    }
 }

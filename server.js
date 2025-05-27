@@ -13,44 +13,42 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/")));
 
 const db = new sqlite3.Database("db/Project.db", (err) => {
-    if(err) {
-        console.log("Errore nella connessione al DB: "+err.message);
-    }else{
-        console.log("Connesso al database SQLite");
-    }
+    if(err) console.log("Errore nella connessione al DB: "+err.message); 
+    else console.log("Connesso al database SQLite");     
 });
 
 app.get("/chats", (req, res) => {
-    const chatsQuery = "SELECT * FROM Chat";
+    const chatsQuery = "SELECT * FROM Chat WHERE ChatOwner = ?";
     
-    db.all(chatsQuery, [], (err, chats) => {
+    db.all(chatsQuery, user.Username, (err, chats) => {
         if(err) {
             res.status(500).json({ error: err.message});
             return;
         }
         
-        console.log("Executed query: "+chatsQuery);
         res.json(chats);
     });
 });
 
-// GUI ENDPOINTS
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname,"pages/login/login.html"));
-});
+app.get("/chat/:chatId", (req, res) => {
+    const chatId = req.params.chatId;
+    const chatQuery = "SELECT * FROM Message WHERE ChatId = ?";
 
-app.get("/home", (req, res) => {
-    if(user) {
-        res.sendFile(path.join(__dirname,"pages/home/home.html"));
-    }else{
-        res.sendFile(path.join(__dirname,"pages/login/login.html"));
-    }
-})
+    db.all(chatQuery, chatId, (err, messages) => {
+        if(err) {
+            res.status(500).json({ error: err.message});
+            return;
+        }
+
+        res.json(messages);
+    });
+});
 
 app.post("/login", (req, res) => {
     const username = req.body.username;
     
     const query = `SELECT * FROM User WHERE Username = ?`;
+    
     db.get(query, username, (err, row) => {
         if(err) {
             res.status(500).json({ error: err.message});
@@ -66,6 +64,21 @@ app.post("/login", (req, res) => {
     });
 
 });
+
+// GUI ENDPOINTS
+app.get("/", (req, res) => {
+    user = null;
+    res.sendFile(path.join(__dirname,"pages/login/login.html"));
+});
+
+app.get("/home", (req, res) => {
+    if(user) {
+        res.sendFile(path.join(__dirname,"pages/home/home.html"));
+    }else{
+        res.sendFile(path.join(__dirname,"pages/login/login.html"));
+    }
+})
+
 
 app.listen(port, () => {
     console.log("Server active on port: "+port);

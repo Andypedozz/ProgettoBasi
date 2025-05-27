@@ -21,6 +21,24 @@ body {
     border-bottom: 1px solid #ccc;
 }
 
+.disconnect-div {
+    padding: 15px;
+    background-color: #ededed;
+    border-bottom: 1px solid #ccc;
+}
+
+.disconnect-div a {
+    text-decoration: none;
+    color: black;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.disconnect-div a:hover {
+    background: rgb(185, 185, 185);
+}
+
 .profile-section h2 {
     margin: 0;
     font-size: 18px;
