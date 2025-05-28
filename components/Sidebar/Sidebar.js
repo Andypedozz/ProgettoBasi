@@ -40,7 +40,7 @@ class Sidebar {
     
     getChatData(name) {
         let found;
-        this.chats.forEach(chat => {
+        this.data.forEach(chat => {
             if(chat.ChatName == name) {
                 found = chat;
             }
