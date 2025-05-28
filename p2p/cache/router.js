@@ -27,6 +27,10 @@ p2pProtocolCache.delete("/remove/:key", (req, res) => {
     innerCache.DetachNode(req, res);
 })
 
+p2pProtocolCache.get("/neighbor/:key", (req, res) => {
+    innerCache.SetNeighbor(req, res);
+})
+
 p2pProtocolCache.listen(HOT_CACHE_PORT, () => {
     console.log("Tiny Distributed Cache ON...");
 });

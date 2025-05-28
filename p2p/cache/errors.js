@@ -2,15 +2,9 @@
  * Errors 
  */
 
-
 class ItemAlreadyExistError extends Error {
-    constructor() {
-        super();
-        this.text = "Node Already Exist!";
-    }
-
-    getText() {
-        return this.text;
+    constructor(errorMessage) {
+        super(errorMessage);
     }
 }
 
@@ -20,7 +14,7 @@ class ItemNotFoundError extends Error {
         this.text = "Node Not Found!";
     }
 
-    getText() {
+    get getText() {
         return this.text;
     }
 }
@@ -31,7 +25,7 @@ class NoNeighborhoodError extends Error {
         this.text = "No Neighborhood Present";
     }
 
-    getText() {
+    get getText() {
         return this.text;
     }
 }
