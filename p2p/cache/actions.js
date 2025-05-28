@@ -3,6 +3,8 @@
  *
  */
 
+const HotCache = require('./hot_cache.js');
+
 
 class HotCacheActionPerformer {
     constructor() {
@@ -68,3 +70,5 @@ class HotCacheActionPerformer {
         }
     }
 }
+
+module.exports = HotCacheActionPerformer;

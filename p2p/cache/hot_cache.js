@@ -2,6 +2,8 @@
  * Minimal Distributed Key-Value Store
  */
 
+const HotCacheActionPerformer = require("./actions");
+
 class HotCache {
     constructor() {
         this.cache = new Map();
@@ -76,3 +78,6 @@ class HotCache {
         return victim;
     }
 }
+
+
+module.exports = HotCache;
