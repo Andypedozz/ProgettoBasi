@@ -70,6 +70,26 @@ body {
     background-color: #e6e6e6;
 }
 
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #25d366;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/********************************/
+/*         CHAT AREA            */
+/********************************/
+
 .chat-area {
     flex: 1;
     display: flex;
@@ -86,21 +106,6 @@ body {
 
 .chat-header h3 {
     margin: 0;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #25d366;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    margin-right: 10px;
-    flex-shrink: 0;
 }
 
 .chat-messages {
@@ -127,4 +132,37 @@ body {
 .message.sent {
     background-color: #dcf8c6;
     align-self: flex-end;
+}
+
+/************************************/
+/*        SEND MESSAGE BAR          */
+/************************************/
+
+.textBarDiv {
+    position: fixed;
+    bottom: 0;
+    margin: 0;
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.textBarDiv .icon {
+    cursor: pointer;
+    color: #54656f;
+    margin: 0 10px;
+    font-size: 24px;
+}
+
+.textBarDiv input {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    outline: none;
+    font-size: 16px;
 }

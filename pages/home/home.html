@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wassup</title>
   <link rel="stylesheet" href="../../pages/home/home.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="components/Sidebar/Sidebar.js"></script>
   <script src="components/Chat/Chat.js"></script>
 </head>
@@ -83,13 +84,13 @@
             })
             .then(response => response.json())
             .then(messages => {
-              const chat = new Chat("chat-messages", type, messages);
+              const chat = new Chat("chat-area", name, type, messages);
             });
           }
   
           // Function to clear the current opened chat container
           function clearArea() {
-            const chatContainer = document.getElementById("chat-messages");
+            const chatContainer = document.getElementById("chat-area");
   
             if(chatContainer.hasChildNodes) {
               while(chatContainer.firstChild) {
@@ -101,11 +102,6 @@
     </div>
   
     <div id="chat-area" class="chat-area">
-      <div class="chat-header">
-        <h3>Contatto 1</h3>
-      </div>
-      <div id="chat-messages" class="chat-messages">
-      </div>
     </div>
 
 </body>
