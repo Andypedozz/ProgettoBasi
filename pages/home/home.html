@@ -51,7 +51,7 @@
               // Adding listeners to open single chats
               sidebar.cards.forEach(card => {
                 card.addEventListener("click", (event) => {
-                  openChat(sidebar, card);
+                  openChat(sidebar, type, card);
                 });
               });
             })
@@ -68,10 +68,11 @@
           }
 
           // Function to open a chat
-          function openChat(sidebar, card) {
+          function openChat(sidebar, type, card) {
             const name = card.getElementsByTagName("h4")[0].innerText;
             const data = sidebar.getChatData(name);
-            const url = "/chat/"+data.ChatId;
+            console.log(data);
+            const url = (type == "chats")? "/chat/"+data.ChatId : "/group/"+data.GroupId;
   
             clearArea();
             fetch(url, {
@@ -82,7 +83,7 @@
             })
             .then(response => response.json())
             .then(messages => {
-              const chat = new Chat("chat-messages", messages);
+              const chat = new Chat("chat-messages", type, messages);
             });
           }
   

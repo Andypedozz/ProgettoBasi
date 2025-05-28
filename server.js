@@ -89,6 +89,24 @@ app.get("/chat/:chatId", (req, res) => {
     }
 });
 
+app.get("/group/:groupId", (req, res) => {
+    if(user) {
+        const groupId = req.params.groupId;
+        const chatQuery = "SELECT * FROM Message WHERE GroupId = ?";
+    
+        db.all(chatQuery, groupId, (err, messages) => {
+            if(err) {
+                res.status(500).json({ error: err.message});
+                return;
+            }
+    
+            res.json(messages);
+        });
+    }else{
+        res.redirect("/");
+    }
+})
+
 // POST: Set the current logged user
 app.post("/login", (req, res) => {
     const username = req.body.username;
