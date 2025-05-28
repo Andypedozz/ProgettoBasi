@@ -11,7 +11,7 @@ class HotCache {
 
     addNode(tel, addr) {
         if (this.#searchNode(tel)) {
-            throw ItemAlreadyExistError();
+            throw new ItemAlreadyExistError("Item Already Exist");
         }
 
         this.cache.set(tel, addr);
@@ -19,7 +19,7 @@ class HotCache {
 
     deleteNode(tel) {
         if (this.#searchNode(tel)) {
-            throw ItemNotFoundError();
+            throw new ItemNotFoundError();
         }
 
         this.cache.delete(tel);
@@ -64,20 +64,23 @@ class HotCache {
         return 2;
     }
 
-    #getNeighbor(key) {
+    #getNeighbor(key, seed) {
         let list = this.cache.keys();
         let victim;
 
-        for (const node in list) {
-            if (node != key) {
-                victim = node;                
-                break;
-            }                    
+        if (seed === 1) {
+            for (const node in list) {
+                if (node != key) {
+                    victim = node;                
+                    break;
+                }                    
+            }
+        } else {
+            // TODO
         }
 
         return victim;
     }
 }
-
 
 module.exports = HotCache;
