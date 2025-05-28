@@ -4,7 +4,7 @@
 
 const routing = require("axios");
 
-class RandomWalRouting {
+class RandomWalkRouting {
     constructor() {
 
     }
