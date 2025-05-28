@@ -11,13 +11,11 @@ const HOT_CACHE_PORT = 6065;
 p2pProtocolCache.use(express.json());
 p2pProtocolCache.use(express.urlencoded({ extended: true }));
 
-
 let innerCache = new HotCacheActionPerformer();
 
 p2pProtocolCache.post("/add", (req, res) => {
     innerCache.AddKeyValuePair(req, res);
 });
-
 
 p2pProtocolCache.get("/search/:key", (req, res) => {
     innerCache.GetNodeAddress(req, res);

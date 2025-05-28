@@ -9,25 +9,22 @@ class ItemAlreadyExistError extends Error {
 }
 
 class ItemNotFoundError extends Error {
-    constructor() {
-        super();
-        this.text = "Node Not Found!";
-    }
-
-    get getText() {
-        return this.text;
+    constructor(errorMessage) {
+        super(errorMessage);
     }
 }
 
 class NoNeighborhoodError extends Error {
-    constructor() {
-        super();
-        this.text = "No Neighborhood Present";
-    }
-
-    get getText() {
-        return this.text;
+    constructor(errorMessage) {
+        super(errorMessage);
     }
 }
+
+
+module.exports = {
+    ItemAlreadyExistError,
+    ItemNotFoundError,
+    NoNeighborhoodError
+};
 
 

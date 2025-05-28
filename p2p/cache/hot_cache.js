@@ -2,7 +2,11 @@
  * Minimal Distributed Key-Value Store
  */
 
-const HotCacheActionPerformer = require("./actions");
+const {
+    ItemAlreadyExistError,
+    ItemNotFoundError,
+    NoNeighborhoodError
+} = require('./errors.js');
 
 class HotCache {
     constructor() {
@@ -18,16 +22,16 @@ class HotCache {
     }
 
     deleteNode(tel) {
-        if (this.#searchNode(tel)) {
-            throw new ItemNotFoundError();
+        if (!(this.#searchNode(tel))) {
+            throw new ItemNotFoundError("Item Not Found!");
         }
 
         this.cache.delete(tel);
     }
 
     getNode(tel) {
-        if (!(this.#searchNode)) {
-            throw ItemNotFoundError();
+        if (!(this.#searchNode(tel))) {
+            throw ItemNotFoundError("Item Not Found!");
         }
 
         return this.cache.get(tel);
@@ -37,7 +41,7 @@ class HotCache {
         let seed = this.#setSeedSize();
         
         if (seed === 0) {
-            throw NoNeighborhoodError();
+            throw new NoNeighborhoodError("No Neighbor Avaliable!");
         } else if (seed === 1) {
             let list = this.cache.keys();
 
@@ -53,7 +57,7 @@ class HotCache {
     }
 
     #setSeedSize() {
-        let dim = this.cache.size();
+        let dim = this.cache.size;
 
         if (dim === 1) {
             return 0;
@@ -69,7 +73,7 @@ class HotCache {
         let victim;
 
         if (seed === 1) {
-            for (const node in list) {
+            for (const node of list) {
                 if (node != key) {
                     victim = node;                
                     break;

@@ -1,46 +1,46 @@
-CREATE TABLE "Attachement" (
-	"AttachementId"	INTEGER,
-	"Blob"	BLOB,
-	PRIMARY KEY("AttachementId")
-)
+CREATE TABLE Attachement (
+	AttachementId	INTEGER,
+	Blob	BLOB,
+	PRIMARY KEY(AttachementId)
+);
 
-CREATE TABLE "Call" (
-	"CallId"	INTEGER,
-	"StartTime"	TEXT,
-	"EndTime"	TEXT,
-	"CallOwner"	INTEGER,
-	PRIMARY KEY("CallId"),
-	FOREIGN KEY("CallOwner") REFERENCES "User"("UserId")
-)
+CREATE TABLE Call (
+	CallId	INTEGER,
+	StartTime	TEXT,
+	EndTime	TEXT,
+	CallOwner	INTEGER,
+	PRIMARY KEY(CallId),
+	FOREIGN KEY(CallOwner) REFERENCES User(UserId)
+);
 
-CREATE TABLE "Chat" (
-	"ChatName"	VARCHAR(30),
-	"CreationDate"	DATE,
-	"Archived"	BOOLEAN,
-	"ChatOwner"	INTEGER,
-	"ChatId"	INTEGER,
-	PRIMARY KEY("ChatId"),
-	FOREIGN KEY("ChatOwner") REFERENCES "User"("UserId")
-)
+CREATE TABLE Chat (
+	ChatName	VARCHAR(30),
+	CreationDate	DATE,
+	Archived	BOOLEAN,
+	ChatOwner	INTEGER,
+	ChatId	INTEGER,
+	PRIMARY KEY(ChatId),
+	FOREIGN KEY(ChatOwner) REFERENCES User(UserId)
+);
 
-CREATE TABLE "Contact" (
-	"ContactId"	INTEGER,
-	"ContactName"	TEXT,
-	"ContactNumber"	TEXT,
-	"ContactSurname"	TEXT,
-	"Blocked"	INTEGER,
-	"Reported"	INTEGER,
-	PRIMARY KEY("ContactId")
-)
+CREATE TABLE Contact (
+	ContactId	INTEGER,
+	ContactName	TEXT,
+	ContactNumber	TEXT,
+	ContactSurname	TEXT,
+	Blocked	INTEGER,
+	Reported	INTEGER,
+	PRIMARY KEY(ContactId)
+);
 
-CREATE TABLE "Draft" (
-	"DraftId"	INTEGER,
-	"DraftContent"	TEXT,
-	"DraftCreationDate"	TEXT,
-	"ChatId"	INTEGER,
-	PRIMARY KEY("DraftId"),
-	FOREIGN KEY("ChatId") REFERENCES "Chat"("ChatId")
-)
+CREATE TABLE Draft (
+	DraftId	INTEGER,
+	DraftContent	TEXT,
+	DraftCreationDate	TEXT,
+	ChatId	INTEGER,
+	PRIMARY KEY(DraftId),
+	FOREIGN KEY(ChatId) REFERENCES Chat(ChatId)
+);
 
 CREATE TABLE "Group" (
 	"GroupName"	TEXT,

@@ -27,7 +27,7 @@ class HotCacheActionPerformer {
             this.inMemoryCache.addNode(tel, address);
             res.status(201).json({ok: "Added Key-Value Pairs"});
        } catch (error) {
-            res.status(500).json({err: error.errorMessage}); 
+            res.status(500).json({err: error.message}); 
        }
     }
 
@@ -47,7 +47,7 @@ class HotCacheActionPerformer {
             let remoteAddr = this.inMemoryCache.getNode(keyToSearch);
             res.status(200).json({ok: remoteAddr});
         } catch (error) {
-            res.status(500).json({err: error.getText()});
+            res.status(500).json({err: error.message});
         }
     }
 
@@ -66,7 +66,7 @@ class HotCacheActionPerformer {
             this.inMemoryCache.deleteNode(keyToDelete);
             res.status(200).json({ok: "Node Deleted!"});
         } catch(error) {
-            res.status(500).json({err: error.getText()});
+            res.status(500).json({err: error.message});
         }
     }
 
@@ -77,7 +77,7 @@ class HotCacheActionPerformer {
             let n = this.inMemoryCache.assignNeighborhood(keyDis);
             res.status(200).json({ok: n});
         } catch (error) {
-            res.status(500).json({err: error.getText()});
+            res.status(500).json({err: error.message});
         }
     }
 }
