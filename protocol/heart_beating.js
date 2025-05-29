@@ -3,8 +3,8 @@ const SubNetContainer = require("./subnet.js");
 const Multicast = require("./multicast.js");
 
 class HeartBeating {
-    constructor() {
-        this.cluster = new SubNetContainer();
+    constructor(clusterManger) {
+        this.cluster = clusterManger;
         this.transport = new Multicast();
     }
 
@@ -17,7 +17,7 @@ class HeartBeating {
             await this.transport.multicast(nodesToBeat);
             let listToCheck = this.transport.getSuspiciousNodeList();
 
-            for (const node in listToCheck) {
+            for (const node of listToCheck) {
                 let all = this.cluster.getAll();
                 for (const tuple in all) {
                     if (tuple.value === node) {

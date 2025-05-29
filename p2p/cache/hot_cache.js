@@ -37,54 +37,42 @@ class HotCache {
         return this.cache.get(tel);
     }
 
-    assignNeighborhood(key) {
-        let seed = this.#setSeedSize();
-        
-        if (seed === 0) {
-            throw new NoNeighborhoodError("No Neighbor Avaliable!");
-        } else if (seed === 1) {
-            let list = this.cache.keys();
+    assignNeighborhood(key, N = 2) {
+        let addrSlice = [];
 
-            return this.#getNeighbor(key)
+        if (!this.#searchNode(key)) {
+            throw new ItemNotFoundError("Item Not Found!");
         }
+    
+        const totalNodes = this.cache.size;
+    
+        if (totalNodes <= 1) {
+            throw new NoNeighborhoodError("No Neighbor Available!");
+        }
+    
+        const allKeys = Array.from(this.cache.keys()).filter(k => k !== key);
 
-        // TODO
-        return null;
+        for (const key of allKeys) {
+            let valueAddr = this.cache.get(key);
+            addrSlice.push(valueAddr);
+        }
+    
+        // Se vuoi massimo N vicini, ma ce ne sono di meno, li restituisci tutti
+        const neighbors = this.#pickRandom(addrSlice, Math.min(N, addrSlice.length));
+        
+        return neighbors;
     }
+    
+    #pickRandom(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
 
     #searchNode(key) {
         return this.cache.has(key);
     }
 
-    #setSeedSize() {
-        let dim = this.cache.size;
-
-        if (dim === 1) {
-            return 0;
-        } else if (dim === 2) {
-            return 1;
-        }
-
-        return 2;
-    }
-
-    #getNeighbor(key, seed) {
-        let list = this.cache.keys();
-        let victim;
-
-        if (seed === 1) {
-            for (const node of list) {
-                if (node != key) {
-                    victim = node;                
-                    break;
-                }                    
-            }
-        } else {
-            // TODO
-        }
-
-        return victim;
-    }
 }
 
 module.exports = HotCache;

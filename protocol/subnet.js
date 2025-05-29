@@ -12,6 +12,13 @@ class SubNetContainer {
         this.container.delete(key);
     }
 
+    get getRandomNode() {
+        const random = Math.floor(Math.random() * 2) + 1;
+        let pool = this.container.values();
+
+        return pool[random];
+    }
+
     get getAll() {
         return this.container.entries();
     }
