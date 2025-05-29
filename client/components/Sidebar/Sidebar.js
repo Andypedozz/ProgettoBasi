@@ -9,20 +9,24 @@ export default class Sidebar {
         this.loadData();
     }
 
+    createElement(tag, className = "", textContent = "") {
+        const el = document.createElement(tag);
+        el.className = className;
+        el.innerText = textContent;
+        return el;
+    }
+
     loadData() {
         const container = document.getElementById(this.containerId);
 
         this.data.forEach(row => {
-            const rowDiv = document.createElement("div");
-            rowDiv.setAttribute("class", "row-item");
-            const rowInfo = document.createElement("div");
-            rowInfo.setAttribute("class","row-info");
+            const rowDiv = this.createElement("div","row-item");
+            const rowInfo = this.createElement("div","row-info");
 
-            const avatarDiv = document.createElement("div");
-            avatarDiv.setAttribute("class","avatar");
+            const avatarDiv = this.createElement("div","avatar");
             
-            const h4 = document.createElement("h4");
-            const p = document.createElement("p");
+            const h4 = this.createElement("h4");
+            const p = this.createElement("p");
             
             if(this.type == "chats") {
                 avatarDiv.innerText = row.ChatName.charAt(0).toUpperCase();
@@ -57,13 +61,5 @@ export default class Sidebar {
             }
         })
         return found;
-    }
-
-    getGroupData() {
-
-    }
-
-    getCallData() {
-
     }
 }

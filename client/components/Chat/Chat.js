@@ -10,29 +10,33 @@ export default class Chat {
         this.loadTextBar();
     }
 
+    createElement(tag, className = "", textContent = "") {
+        const el = document.createElement(tag);
+        el.className = className;
+        el.innerText = textContent;
+        return el;
+    }
+
     loadChat() {
         const container = document.getElementById(this.containerId);
 
-        const chatHeader = document.createElement("div");
-        chatHeader.setAttribute("class","chat-header");
-        const h3 = document.createElement("h3");
-        h3.innerText = this.name;
+        const chatHeader = this.createElement("div","chat-header");
+        const h3 = this.createElement("h3","",this.name);
         chatHeader.appendChild(h3);
         container.appendChild(chatHeader);
 
-        const chatMessagesDiv = document.createElement("div");
-        chatMessagesDiv.setAttribute("class","chat-messages");
+        const chatMessagesDiv = this.createElement("div","chat-messages");
         
         this.messages.forEach(message => {
-            const div = document.createElement("div");
+            const div = this.createElement("div");
+            if(message.SentReceived) div.setAttribute("class","message sent");
+            else div.setAttribute("class","message received");
+
             if(this.type == "groups") {
-                const avatarDiv = document.createElement("div");
-                avatarDiv.setAttribute("class","message-avatar");
+                const avatarDiv = this.createElement("div","message-avatar");
                 avatarDiv.innerText = "A";
                 div.appendChild(avatarDiv);
             }
-            if(message.SentReceived) div.setAttribute("class","message sent");
-            else div.setAttribute("class","message received");
             div.innerText = message.Text;
             chatMessagesDiv.appendChild(div);
         });
@@ -43,17 +47,12 @@ export default class Chat {
     
     loadTextBar() {
         const container = document.getElementById(this.containerId);
-        const textBarDiv = document.createElement("div");
-        const span1 = document.createElement("span");
-        span1.innerText = "insert_emoticon";
-        span1.setAttribute("class","material-icons icon");
-        const input = document.createElement("input");
+        const textBarDiv = this.createElement("div","textBarDiv");
+        const span1 = this.createElement("span","material-icons icon","insert_emoticon");
+        const input = this.createElement("input");
         input.type = "text";
         input.placeholder = "Scrivi un messaggio...";
-        const span2 = document.createElement("span");
-        span2.setAttribute("class","material-icons icon");
-        span2.innerText = "send";
-        textBarDiv.setAttribute("class","textBarDiv");
+        const span2 = this.createElement("span","material-icons icon","send");
 
         textBarDiv.appendChild(span1);
         textBarDiv.appendChild(input);

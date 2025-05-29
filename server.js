@@ -35,6 +35,7 @@ app.get("/chats", (req, res) => {
     }
 });
 
+// GET all GroupChats for current logged User
 app.get("/groups", (req, res) => {
     if(user) {
         const chatsQuery = "SELECT * FROM GroupChat WHERE GroupOwner = ?";
@@ -52,6 +53,7 @@ app.get("/groups", (req, res) => {
     }
 });
 
+// GET all Calls for current logged User
 app.get("/calls", (req, res) => {
     if(user) {
         const chatsQuery = "SELECT * FROM Call WHERE CallOwner = ?";
@@ -88,6 +90,7 @@ app.get("/chat/:chatId", (req, res) => {
     }
 });
 
+// GET all messages for a single GroupChat
 app.get("/group/:groupId", (req, res) => {
     if(user) {
         const groupId = req.params.groupId;
@@ -116,7 +119,6 @@ app.post("/login", (req, res) => {
     
     const query = `SELECT * FROM User WHERE Username = ?`;
 
-    
     db.get(query, username, (err, row) => {
         if(err) {
             res.status(500).json({ error: err.message});
