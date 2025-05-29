@@ -14,6 +14,7 @@ p2pProtocolCache.use(express.urlencoded({ extended: true }));
 let innerCache = new HotCacheActionPerformer();
 
 p2pProtocolCache.post("/add", (req, res) => {
+    console.log("Added a New Node")
     innerCache.AddKeyValuePair(req, res);
 });
 
