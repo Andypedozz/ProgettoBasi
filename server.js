@@ -4,7 +4,8 @@ const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const fs = require("fs");
 const { json } = require("express/lib/response");
-const SubNetContainer = require("protocol/subnet.js");
+const SubNetContainer = require("./protocol/subnet.js");
+
 //const { use } = require("react");
 
 const app = express();
