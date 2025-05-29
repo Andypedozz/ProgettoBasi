@@ -1,19 +1,9 @@
 const express = require("express");
-const httpPerformer = require("axios");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
-const fs = require("fs");
-const { json } = require("express/lib/response");
-const SubNetContainer = require("./server/protocol/subnet.js");
-
-//const { use } = require("react");
 
 const app = express();
 const port = 3001;
-
-// well known endpoints
-const HOT_CACHE_ADD = "http://localhost:6065/add";
-const HOT_CACHE_NEIGHBOR = "http://localhost:6065/neighbor";
 
 // Currently logged user
 let user;
@@ -136,24 +126,6 @@ app.post("/login", (req, res) => {
         if(row) {
             user = row;
             res.redirect("/home");
-            
-            const host = ["localhost", port];
-
-            const registrationMessage = {
-                key: user,
-                value: host.join(":"), 
-            };
-            // access to the Net
-            httpPerformer.post(HOT_CACHE_ADD, JSON.stringify(registrationMessage));
-            getNeighbors().then(neighbors => {
-               let container = new SubNetContainer();
-               let keyIndex = 0;
-               for (const n of neighbors) {
-                container.addNeighbor(++keyIndex, n);
-               } 
-            })
-
-            // TODO => heart beating
         }else{
             res.redirect("/");
         }
@@ -178,27 +150,3 @@ app.get("/home", (req, res) => {
 app.listen(port, () => {
     console.log("Server active on port: "+port);
 })
-
-async function getNeighbors() {
-    let breaker = false;
-    let neighbors;
-
-    while (true) {
-        await sleep(2000);
-
-        httpPerformer.get(HOT_CACHE_NEIGHBOR)
-        .then(res => {
-            neighbors = res.data.ok;
-           breaker = true; 
-        })
-
-        if (breaker)
-            break;
-    }
-
-    return neighbors;
-}
-
-function sleep(timeToSleep) {
-    return new Promise((resolve) => setTimeout(resolve, timeToSleep));
-}
