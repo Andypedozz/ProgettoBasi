@@ -15,23 +15,21 @@ class RandomWalkRouting {
 
     forwardMessage(message) {
         const destinationAddr = message.destination;
-        if (destinationAddr != hostAccountInfo) {
-            // list of neighbors
-            const entries = this.subNet.getAll();
+        // list of neighbors
+        const entries = this.subNet.getAll();
 
-            // pick random neighbor
-            const neighbor = this.#pickAtRandom(entries);
+        // pick random neighbor
+        const neighbor = this.#pickAtRandom(entries);
 
-            const peerAddr = `http://${neighbor}/message`
-            // make a POST request
-            routing.post(peerAddr, message)
-            .then(res => {
-                console.log("Ack Message");
-            })
-            .catch(err => {
-                // TODO => Retry Sys
-            });
-        } 
+        const peerAddr = `http://${neighbor}/message`
+        // make a POST request
+        routing.post(peerAddr, message)    
+        .then(res => {
+            console.log("Ack Message");
+        })
+        .catch(err => {
+            // TODO => Retry Sys
+        });
     }
 
     #pickAtRandom(list) {
