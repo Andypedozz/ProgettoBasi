@@ -1,5 +1,5 @@
 
-class Chat {
+export default class Chat {
     
     constructor(containerId, name, type, messages) {
         this.containerId = containerId;

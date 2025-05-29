@@ -4,7 +4,7 @@ const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const fs = require("fs");
 const { json } = require("express/lib/response");
-const SubNetContainer = require("./protocol/subnet.js");
+const SubNetContainer = require("./server/protocol/subnet.js");
 
 //const { use } = require("react");
 
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/")));
 
-const db = new sqlite3.Database("db/Project.db", (err) => {
+const db = new sqlite3.Database("server/db/Project.db", (err) => {
     if(err) console.log("Errore nella connessione al DB: "+err.message); 
     else console.log("Connesso al database SQLite");     
 });
@@ -136,7 +136,7 @@ app.post("/login", (req, res) => {
         if(row) {
             user = row;
             res.redirect("/home");
-
+            
             const host = ["localhost", port];
 
             const registrationMessage = {
@@ -164,14 +164,14 @@ app.post("/login", (req, res) => {
 // GUI ENDPOINTS
 app.get("/", (req, res) => {
     user = null;
-    res.sendFile(path.join(__dirname,"pages/login/login.html"));
+    res.sendFile(path.join(__dirname,"client/pages/login/login.html"));
 });
 
 app.get("/home", (req, res) => {
     if(user) {
-        res.sendFile(path.join(__dirname,"pages/home/home.html"));
+        res.sendFile(path.join(__dirname,"client/pages/home/home.html"));
     }else{
-        res.sendFile(path.join(__dirname,"pages/login/login.html"));
+        res.sendFile(path.join(__dirname,"client/pages/login/login.html"));
     }
 })
 

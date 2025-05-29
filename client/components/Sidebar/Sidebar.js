@@ -1,5 +1,5 @@
 
-class Sidebar {
+export default class Sidebar {
 
     constructor(containerId, type, data = []) {
         this.containerId = containerId;
