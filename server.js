@@ -38,9 +38,9 @@ app.get("/chats", (req, res) => {
 // GET all GroupChats for current logged User
 app.get("/groups", (req, res) => {
     if(user) {
-        const chatsQuery = "SELECT * FROM GroupChat WHERE GroupOwner = ?";
+        const groupsQuery = "SELECT * FROM GroupChat WHERE GroupOwner = ?";
         
-        db.all(chatsQuery, user.Username, (err, groups) => {
+        db.all(groupsQuery, user.Username, (err, groups) => {
             if(err) {
                 res.status(500).json({ error: err.message});
                 return;
@@ -56,9 +56,9 @@ app.get("/groups", (req, res) => {
 // GET all Calls for current logged User
 app.get("/calls", (req, res) => {
     if(user) {
-        const chatsQuery = "SELECT * FROM Call WHERE CallOwner = ?";
+        const callsQuery = "SELECT * FROM Call WHERE CallOwner = ?";
         
-        db.all(chatsQuery, user.Username, (err, calls) => {
+        db.all(callsQuery, user.Username, (err, calls) => {
             if(err) {
                 res.status(500).json({ error: err.message});
                 return;
@@ -94,9 +94,9 @@ app.get("/chat/:chatId", (req, res) => {
 app.get("/group/:groupId", (req, res) => {
     if(user) {
         const groupId = req.params.groupId;
-        const chatQuery = "SELECT * FROM Message WHERE GroupId = ?";
+        const groupQuery = "SELECT * FROM Message WHERE GroupId = ?";
     
-        db.all(chatQuery, groupId, (err, messages) => {
+        db.all(groupQuery, groupId, (err, messages) => {
             if(err) {
                 res.status(500).json({ error: err.message});
                 return;

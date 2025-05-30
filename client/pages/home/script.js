@@ -23,7 +23,7 @@ function addListeners() {
 
 function fetchData(type) {
     clearSidebar();
-
+    
     const url = "/"+type;
     fetch(url, {
         method : "GET"
@@ -43,12 +43,7 @@ function fetchData(type) {
 
 function clearSidebar() {
     const sidebarContainer = document.getElementById("chat-list");
-
-    if(sidebarContainer.hasChildNodes) {
-        while(sidebarContainer.firstChild) {
-            sidebarContainer.removeChild(sidebarContainer.firstChild);
-        }
-    }
+    sidebarContainer.innerHTML = "";
 }
 
 // Function to open a chat
@@ -65,17 +60,12 @@ function openChat(sidebar, type, card) {
     .then(messages => {
         const chat = new Chat("chat-area", name, type, messages);
     });
-    }
+}
 
-    // Function to clear the current opened chat container
-    function clearArea() {
+// Function to clear the current opened chat container
+function clearArea() {
     const chatContainer = document.getElementById("chat-area");
-
-    if(chatContainer.hasChildNodes) {
-        while(chatContainer.firstChild) {
-            chatContainer.removeChild(chatContainer.firstChild);
-        }
-    }
+    chatContainer.innerHTML = "";
 }
 
 addListeners();
