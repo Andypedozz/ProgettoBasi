@@ -5,7 +5,6 @@ import styles from "./MainPage.module.css";
 import Chat from './Chat/Chat';
 
 export default function MainPage(props) {
-    const user = props.user;
     const setUser = props.setUser;
 
     const [items, setItems] = useState([])

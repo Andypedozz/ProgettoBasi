@@ -1,10 +1,8 @@
 
-import { useState } from "react";
 import styles from "./MainPage.module.css";
 
 export default function ChatList(props) {
 
-    const chat = props.chat;
     const setChat = props.setChat;
 
     const openChat = (item) => {
@@ -13,9 +11,9 @@ export default function ChatList(props) {
 
     return (
         <div className={styles.chatList}>
-            {(props.type == "chats")? (
+            {(props.type === "chats")? (
                 <h3>Chat</h3>
-            ) : (props.type == "groups") ? (
+            ) : (props.type === "groups") ? (
                 <h3>Gruppi</h3>
             ) : (
                 <h3>Chiamate</h3>

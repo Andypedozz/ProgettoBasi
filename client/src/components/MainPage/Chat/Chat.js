@@ -7,7 +7,7 @@ export default function Chat(props) {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        if(!props.chat || !props.chat.ChatId) return;
+        if(!props.chat) return;
 
         fetch("/chat/"+props.chat.ChatId, {
             method : "GET",
@@ -19,7 +19,7 @@ export default function Chat(props) {
         .then(data => {
             setMessages(data);
         })
-    }, [props.chat.ChatId]);
+    }, [props.chat.ChatId, props.chat]);
 
     return (
         <div className={styles.chatArea}>
