@@ -1,0 +1,29 @@
+
+.callCardHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.callCardHeader * {
+    margin: 10px
+}
+
+.callCardHeader button {
+    border: none;
+    border-radius: 10px;
+    background: lightblue;
+}
+
+.callCardBody div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+
+.callCardBody label {
+    background: lightblue;
+    padding: 10px;
+    border-radius: 10px;
+}

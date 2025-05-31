@@ -5,11 +5,14 @@ import TextBar from "./TextBar";
 export default function Chat(props) {
 
     const [messages, setMessages] = useState([]);
+    const chat = props.chat;
+    const type = props.type;
 
     useEffect(() => {
-        if(!props.chat) return;
-
-        fetch("/api/chat/"+props.chat.ChatId, {
+        if(!chat) return;
+        
+        const suffix = (type === "chats") ? "/chat/"+chat.ChatId : "/group/"+chat.GroupId;
+        fetch("/api/"+suffix, {
             method : "GET",
             headers : {
                 "Content-Type" : "application/json"
@@ -29,9 +32,9 @@ export default function Chat(props) {
             <div className={styles.chatMessages}>
                 {messages.map((message, index) => (
                     message.SentReceived ? (
-                        <div className={styles.messageSent}>{message.Text}</div>
+                        <div key={index} className={styles.messageSent}>{message.Text}</div>
                     ) : (
-                        <div className={styles.messageReceived}>{message.Text}</div>
+                        <div key={index} className={styles.messageReceived}>{message.Text}</div>
                     )
                 ))}
             </div>

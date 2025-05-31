@@ -3,6 +3,7 @@ import ChatList from './ChatList';
 import { useState } from 'react';
 import styles from "./MainPage.module.css";
 import Chat from './Chat/Chat';
+import CallCard from './Chat/CallCard';
 
 export default function MainPage(props) {
     const setUser = props.setUser;
@@ -12,6 +13,7 @@ export default function MainPage(props) {
     const [loading, setLoading] = useState(false);
     const [hasFetched, setHasFetched] = useState(false);  
     const [chat, setChat] = useState(null);
+    const [call, setCall] = useState(null);
 
     // Function to fetch data based on click
     const fetchData = (path) => {
@@ -64,17 +66,22 @@ export default function MainPage(props) {
                 {!hasFetched ? (
                     <div></div>
                 ) : loading ? (
-                    <p>Loading...</p>
+                    <p></p>
                 ) : items.length === 0 ? (
-                    <p>No data to show.</p>
+                    <p></p>
                 ) : (
-                    <ChatList data={items} type={endpoint} chat={chat} setChat={setChat}/>
+                    <ChatList data={items} type={endpoint} chat={chat} setChat={setChat} call={call} setCall={setCall}/>
                 )} 
             </div>
                 {chat ? (
-                    <Chat chat={chat}/>
+                    <Chat chat={chat} type={endpoint}/>
                 ) : (
                     <div></div>
+                )}
+                {call ? (
+                    <CallCard call={call} setCall={setCall}/>
+                ) : (
+                    <></>
                 )}
         </div>
     );
