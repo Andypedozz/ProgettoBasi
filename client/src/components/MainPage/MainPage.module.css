@@ -1,5 +1,5 @@
 /* Base Reset & Modern Font */
-body {
+.mainContainer {
   margin: 0;
   font-family: 'Inter', sans-serif;
   height: 100vh;
@@ -21,15 +21,16 @@ body {
   transition: all 0.3s ease-in-out;
 }
 
-.disconnect-div,
-.profile-section,
-.selection-section {
+.disconnectDiv,
+.profileSection,
+.selectionSection {
   padding: 15px;
   background-color: #f1f3f4;
   border-bottom: 1px solid #e0e0e0;
 }
 
-.disconnect-div a {
+.disconnectBtn {
+  margin: 15px;
   text-decoration: none;
   color: #1a73e8;
   border: 1px solid #1a73e8;
@@ -39,24 +40,24 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.disconnect-div a:hover {
+.disconnectBtn:hover {
   background-color: #1a73e8;
   color: white;
 }
 
-.profile-section h2 {
+.profileSection h2 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
 }
 
-.selection-section {
+.selectionSection {
   display: flex;
   justify-content: space-around;
   gap: 10px;
 }
 
-.selection-section button {
+.selectionSection button {
   background-color: #e8f0fe;
   border: none;
   padding: 10px 15px;
@@ -67,19 +68,23 @@ body {
   transition: background-color 0.2s ease;
 }
 
-.selection-section button:hover {
+.selectionSection button:hover {
   background-color: #d2e3fc;
 }
 
 /* Chat List */
-.chat-list {
+.chatList {
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
 
+.chatList > h3 {
+  text-align: center;
+}
+
 /* Chat Row */
-.row-item {
+.rowItem {
   display: flex;
   align-items: center;
   padding: 15px;
@@ -88,7 +93,7 @@ body {
   transition: background-color 0.2s ease;
 }
 
-.row-item:hover {
+.rowItem:hover {
   background-color: #f5f5f5;
 }
 
@@ -113,7 +118,7 @@ body {
 /*         CHAT AREA            */
 /********************************/
 
-.chat-area {
+.chatArea {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -121,21 +126,21 @@ body {
   background-color: #f0f2f5;
 }
 
-.chat-header {
+.chatHeader {
   padding: 15px;
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.chat-header h3 {
+.chatHeader h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
 }
 
 /* Messages */
-.chat-messages {
+.chatMessages {
   flex: 1;
   display: flex;
   flex-direction: column;
