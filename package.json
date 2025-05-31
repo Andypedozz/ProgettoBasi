@@ -6,7 +6,7 @@
   "scripts": {
 	"start" : "concurrently \"npm run server\" \"npm run client\"",
 	"server" : "node server/server.js",
-	"client" : "npm start --prefix client",
+	"client" : "npm run dev --prefix client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

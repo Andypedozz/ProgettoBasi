@@ -9,7 +9,7 @@ export default function Chat(props) {
     useEffect(() => {
         if(!props.chat) return;
 
-        fetch("/chat/"+props.chat.ChatId, {
+        fetch("/api/chat/"+props.chat.ChatId, {
             method : "GET",
             headers : {
                 "Content-Type" : "application/json"

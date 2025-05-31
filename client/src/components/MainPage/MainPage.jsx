@@ -17,7 +17,7 @@ export default function MainPage(props) {
     const fetchData = (path) => {
         setLoading(true);
         setHasFetched(true);
-        fetch("/"+path)
+        fetch("/api/"+path)
         .then((res) => {
         if(!res.ok) throw new Error("Errore nella richiesta");
             return res.json();
@@ -35,7 +35,7 @@ export default function MainPage(props) {
 
     // Function to logout
     const disconnect = () => {
-        fetch("/logout", {
+        fetch("/api/logout", {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json"

@@ -9,7 +9,7 @@ export default function Login(props) {
         e.preventDefault();
         const username = e.target.username.value.trim();
 
-        fetch("/login", {
+        fetch("/api/login", {
             method : "POST",
             headers : {
                 "Content-Type" : "application/json"
