@@ -12,7 +12,7 @@ export default function Chat(props) {
         if(!chat) return;
         
         const suffix = (type === "chats") ? "/chat/"+chat.ChatId : "/group/"+chat.GroupId;
-        fetch("/api/"+suffix, {
+        fetch("/api"+suffix, {
             method : "GET",
             headers : {
                 "Content-Type" : "application/json"
@@ -38,7 +38,7 @@ export default function Chat(props) {
                     )
                 ))}
             </div>
-            <TextBar />
+            <TextBar chat={chat} type={type} messages={messages} setMessages={setMessages}/>
         </div>
     )
 }
