@@ -14,15 +14,15 @@ export default function CallCard(props) {
             </div>
             <div className={styles.callCardBody}>
                 <div>
-                    <label htmlFor="">Date</label>
+                    <label>Date</label>
                     <p>{call.Date}</p>
                 </div>
                 <div>
-                    <label htmlFor="">Start time</label>
+                    <label>Start time</label>
                     <p>{call.StartTime}</p>
                 </div>
                 <div>
-                    <label htmlFor="">End time</label>
+                    <label>End time</label>
                     <p>{call.EndTime}</p>
                 </div>
             </div>

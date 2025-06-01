@@ -91,23 +91,28 @@ app.get("/group/:groupId", async (req, res) => {
     }
 })
 
-/**
- * FIXME
- */
 app.post("/addMessage", async (req, res) => {
     const message = req.body;
-    const values = Object.values(message);
 
-    const maxIdQuery = "SELECT max(MessageId) FROM Message";
-    const addMessageQuery = "INSERT INTO Message ('MessageId','Text','Read','Pinned','ChatId','Datetime','SentReceived','GroupId') VALUES (?,?,?,?,?,?,?)";
-    
-    try{
-        const maxId = await fetchAll(db, maxIdQuery);
-        message.MessageId = maxId;
-        await execute(db, addMessageQuery, [message]);
-        return res.json({ message: "Successfully added message"});
-    }catch(err) {
-        return res.json({ error: err})
+    const maxIdQuery = "SELECT max(MessageId) as maxId FROM Message";
+    const addMessageQuery = message.ChatId
+        ? "INSERT INTO Message (Text, Read, Pinned, Datetime, SentReceived, ChatId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        : "INSERT INTO Message (Text, Read, Pinned, Datetime, SentReceived, GroupId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    try {
+        const maxIdRow = await fetchFirst(db, maxIdQuery);
+        const nextId = (maxIdRow.maxId || 0) + 1;
+        message.MessageId = nextId;
+
+        const values = message.ChatId
+            ? [message.Text, message.Read, message.Pinned, message.Datetime, message.SentReceived, message.ChatId, message.MessageId]
+            : [message.Text, message.Read, message.Pinned, message.Datetime, message.SentReceived, message.GroupId, message.MessageId];
+
+        await execute(db, addMessageQuery, values);
+        res.json({ message: "Successfully added message" });
+    } catch (err) {
+        console.error("Errore durante inserimento messaggio:", err);
+        res.status(500).json({ error: err.message });
     }
 });
 

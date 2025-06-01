@@ -1,44 +1,58 @@
-import { useEffect, useState } from "react"
-import styles from "./Chat.module.css"
-import TextBar from "./TextBar";
+import { useEffect, useState } from 'react';
+import styles from './Chat.module.css';
+import TextBar from './TextBar';
 
-export default function Chat(props) {
-
+export default function Chat({ chat, type }) {
     const [messages, setMessages] = useState([]);
-    const chat = props.chat;
-    const type = props.type;
 
     useEffect(() => {
-        if(!chat) return;
-        
-        const suffix = (type === "chats") ? "/chat/"+chat.ChatId : "/group/"+chat.GroupId;
-        fetch("/api"+suffix, {
-            method : "GET",
-            headers : {
-                "Content-Type" : "application/json"
-            }
+        if (!chat) return;
+
+        const suffix = type === 'chats' ? `/chat/${chat.ChatId}` : `/group/${chat.GroupId}`;
+
+        fetch(`/api${suffix}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
-        .then(res => res.json())
-        .then(data => {
-            setMessages(data);
-        })
-    }, [props.chat.ChatId, props.chat]);
+            .then((res) => {
+                if (!res.ok) throw new Error('Errore nel fetch dei messaggi');
+                return res.json();
+            })
+            .then((data) => setMessages(data))
+            .catch((err) => console.error(err));
+    }, [chat?.ChatId, chat?.GroupId]);
+
+    const getChatName = () => chat?.ChatName || chat?.GroupName || 'Chat';
 
     return (
         <div className={styles.chatArea}>
-            <div className={styles.chatHeader}>
-                <h1>{props.chat.ChatName || props.chat.GroupName}</h1>
-            </div>
-            <div className={styles.chatMessages}>
+            <header className={styles.chatHeader}>
+                <h1>{getChatName()}</h1>
+            </header>
+
+            <section className={styles.chatMessages}>
                 {messages.map((message, index) => (
-                    message.SentReceived ? (
-                        <div key={index} className={styles.messageSent}>{message.Text}</div>
-                    ) : (
-                        <div key={index} className={styles.messageReceived}>{message.Text}</div>
-                    )
+                    <div
+                        key={index}
+                        className={
+                            message.SentReceived
+                                ? styles.messageSent
+                                : styles.messageReceived
+                        }
+                    >
+                        {message.Text}
+                    </div>
                 ))}
-            </div>
-            <TextBar chat={chat} type={type} messages={messages} setMessages={setMessages}/>
+            </section>
+
+            <TextBar
+                chat={chat}
+                type={type}
+                messages={messages}
+                setMessages={setMessages}
+            />
         </div>
-    )
+    );
 }

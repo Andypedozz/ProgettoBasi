@@ -1,88 +1,86 @@
-
-import ChatList from './ChatList';
 import { useState } from 'react';
-import styles from "./MainPage.module.css";
+import ChatList from './ChatList';
 import Chat from './Chat/Chat';
 import CallCard from './Chat/CallCard';
+import styles from './MainPage.module.css';
 
-export default function MainPage(props) {
-    const setUser = props.setUser;
-
-    const [items, setItems] = useState([])
-    const [endpoint, setEndpoint] = useState("");
+export default function MainPage({ user, setUser }) {
+    const [items, setItems] = useState([]);
+    const [endpoint, setEndpoint] = useState('');
     const [loading, setLoading] = useState(false);
-    const [hasFetched, setHasFetched] = useState(false);  
+    const [hasFetched, setHasFetched] = useState(false);
     const [chat, setChat] = useState(null);
     const [call, setCall] = useState(null);
 
-    // Function to fetch data based on click
-    const fetchData = (path) => {
-        setLoading(true);
-        setHasFetched(true);
-        fetch("/api/"+path)
-        .then((res) => {
-        if(!res.ok) throw new Error("Errore nella richiesta");
-            return res.json();
-        })
-        .then(data => {
+    const fetchData = async (path) => {
+        try {
+            setLoading(true);
+            setHasFetched(true);
+            const res = await fetch(`/api/${path}`);
+            if (!res.ok) throw new Error('Errore nella richiesta');
+            const data = await res.json();
             setItems(data);
             setEndpoint(path);
+        } catch (err) {
+            console.error('Errore nel fetch:', err);
+        } finally {
             setLoading(false);
-        })
-        .catch(err => {
-            console.error("Errore nel fetch: "+err);
-            setLoading(false);
-        })
-    }
+        }
+    };
 
-    // Function to logout
-    const disconnect = () => {
-        fetch("/api/logout", {
-            method : "POST",
-            headers : {
-                "Content-Type" : "application/json"
-            }
-        })
-        .then(() => {
+    const disconnect = async () => {
+        try {
+            await fetch('/api/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
             setUser(null);
-        });
-    }
+        } catch (err) {
+            console.error('Errore durante il logout:', err);
+        }
+    };
+
+    const renderContent = () => {
+        if (!hasFetched || loading) return null;
+        if (items.length === 0) return <p>Nessun elemento trovato.</p>;
+
+        return (
+            <ChatList
+                data={items}
+                type={endpoint}
+                chat={chat}
+                setChat={setChat}
+                call={call}
+                setCall={setCall}
+            />
+        );
+    };
 
     return (
         <div className={styles.mainContainer}>
-            <div className={styles.sidebar}>
-                <div id={styles.disconnectDiv}>
-                    <button className={styles.disconnectBtn} onClick={() => disconnect()}>Logout</button>
+            <aside className={styles.sidebar}>
+                <div className={styles.disconnectDiv}>
+                    <button className={styles.disconnectBtn} onClick={disconnect}>
+                        Logout
+                    </button>
                 </div>
-                <div className={styles.profileSection}>
+
+                <section className={styles.profileSection}>
                     <h2>Your profile</h2>
-                    <p>Hello, {props.user.Name}</p>  
-                </div>
-                <div className={styles.selectionSection}>
-                    <button onClick={() => fetchData("chats")}>Chats</button>
-                    <button onClick={() => fetchData("groups")}>Groups</button>
-                    <button onClick={() => fetchData("calls")}>Calls</button>
-                </div>
-                {!hasFetched ? (
-                    <div></div>
-                ) : loading ? (
-                    <p></p>
-                ) : items.length === 0 ? (
-                    <p></p>
-                ) : (
-                    <ChatList data={items} type={endpoint} chat={chat} setChat={setChat} call={call} setCall={setCall}/>
-                )} 
-            </div>
-                {chat ? (
-                    <Chat chat={chat} type={endpoint}/>
-                ) : (
-                    <div></div>
-                )}
-                {call ? (
-                    <CallCard call={call} setCall={setCall}/>
-                ) : (
-                    <></>
-                )}
+                    <p>Hello, {user?.Name || 'Guest'}</p>
+                </section>
+
+                <section className={styles.selectionSection}>
+                    <button onClick={() => fetchData('chats')}>Chats</button>
+                    <button onClick={() => fetchData('groups')}>Groups</button>
+                    <button onClick={() => fetchData('calls')}>Calls</button>
+                </section>
+
+                {renderContent()}
+            </aside>
+
+            {chat && <Chat chat={chat} type={endpoint} />}
+            {call && <CallCard call={call} setCall={setCall} />}
         </div>
     );
 }
