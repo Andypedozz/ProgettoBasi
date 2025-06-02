@@ -1,11 +1,12 @@
-import styles from './MainPage.module.css';
 
-export default function ChatList({ data, type, setChat, setCall }) {
+export default function ChatList({ data, type, setChat, setCall, setContact }) {
     const openItem = (item) => {
         if (type === 'chats' || type === 'groups') {
             setChat(item);
-        } else {
+        } else if(type === 'calls') {
             setCall(item);
+        }else{
+            setContact(item);
         }
     };
 
@@ -17,6 +18,8 @@ export default function ChatList({ data, type, setChat, setCall }) {
                 return 'Gruppi';
             case 'calls':
                 return 'Chiamate';
+            case 'contacts':
+                return 'Contatti';
             default:
                 return 'Elementi';
         }
@@ -25,25 +28,29 @@ export default function ChatList({ data, type, setChat, setCall }) {
     const getAvatar = (item) => {
         if (type === 'chats') return item.ChatName?.charAt(0).toUpperCase() || '?';
         if (type === 'groups') return item.GroupName?.charAt(0).toUpperCase() || '?';
-        if (type === 'calls') return item.CallId;
+        if (type === 'calls') return item.CallId || '?';
+        if (type === 'contacts') return item.ContactName?.charAt(0).toUpperCase() || '?';
         return '?';
     };
 
     const getLabel = (item) => {
-        return item.ChatName || item.GroupName || `Call ${item.CallId}`;
+        return item.ChatName || item.GroupName || item.ContactName || `Call ${item.CallId}`;
     };
 
     return (
-        <div className={styles.chatList}>
-            <h3>{getTitle()}</h3>
+        <div className="space-y-4 px-3">
+            <h3 className="text-lg font-semibold text-gray-900 mb-5">{getTitle()}</h3>
+
             {data.map((item, index) => (
                 <div
                     key={index}
-                    className={styles.rowItem}
                     onClick={() => openItem(item)}
+                    className="flex items-center gap-4 p-3 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer transition shadow-sm"
                 >
-                    <div className={styles.avatar}>{getAvatar(item)}</div>
-                    <h3>{getLabel(item)}</h3>
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-indigo-300 flex items-center justify-center text-white text-lg font-semibold">
+                    {getAvatar(item)}
+                </div>
+                <h3 className="text-gray-900 font-medium truncate">{getLabel(item)}</h3>
                 </div>
             ))}
         </div>

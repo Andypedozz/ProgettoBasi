@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MainPage from './components/MainPage/MainPage';
 import Login from './components/Login/Login';
+import "./index.css";
 
 function App() {
 

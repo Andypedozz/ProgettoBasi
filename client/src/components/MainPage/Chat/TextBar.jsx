@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styles from './TextBar.module.css';
 
 export default function TextBar({ chat, type, messages, setMessages }) {
     const [text, setText] = useState('');
@@ -50,16 +49,20 @@ export default function TextBar({ chat, type, messages, setMessages }) {
     };
 
     return (
-        <div className={styles.textBarContainer}>
+        <div className="flex items-center gap-4 bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-300">
             <textarea
-                className={styles.textInput}
+                className="flex-grow resize-none bg-gray-100 text-gray-900 placeholder-gray-400 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-h-28 scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-gray-100"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Scrivi un messaggio"
                 rows={1}
             />
-            <button className={styles.sendButton} onClick={handleSend}>
+            <button
+                className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-3 flex items-center justify-center transition shadow-md"
+                onClick={handleSend}
+                aria-label="Invia messaggio"
+            >
                 ➤
             </button>
         </div>

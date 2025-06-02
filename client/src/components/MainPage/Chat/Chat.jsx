@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import styles from './Chat.module.css';
 import TextBar from './TextBar';
 
 export default function Chat({ chat, type }) {
@@ -16,43 +15,48 @@ export default function Chat({ chat, type }) {
                 'Content-Type': 'application/json',
             },
         })
-            .then((res) => {
-                if (!res.ok) throw new Error('Errore nel fetch dei messaggi');
-                return res.json();
-            })
-            .then((data) => setMessages(data))
-            .catch((err) => console.error(err));
+        .then((res) => {
+            if (!res.ok) throw new Error('Errore nel fetch dei messaggi');
+            return res.json();
+        })
+        .then((data) => setMessages(data))
+        .catch((err) => console.error(err));
     }, [chat?.ChatId, chat?.GroupId]);
 
     const getChatName = () => chat?.ChatName || chat?.GroupName || 'Chat';
 
     return (
-        <div className={styles.chatArea}>
-            <header className={styles.chatHeader}>
-                <h1>{getChatName()}</h1>
+        <div className="flex flex-col h-full bg-white text-gray-900">
+            {/* Header Chat */}
+            <header className="bg-indigo-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h1 className="text-xl font-semibold truncate">{getChatName()}</h1>
             </header>
 
-            <section className={styles.chatMessages}>
+            {/* Messaggi */}
+            <section className="flex-1 overflow-y-auto px-6 py-6 space-y-4 scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-gray-100">
                 {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={
-                            message.SentReceived
-                                ? styles.messageSent
-                                : styles.messageReceived
-                        }
-                    >
-                        {message.Text}
-                    </div>
+                <div
+                    key={index}
+                    className={`max-w-[20%] px-5 py-3 rounded-2xl text-sm break-words whitespace-pre-wrap shadow-sm ${
+                    message.SentReceived
+                        ? 'ml-auto bg-indigo-600 text-white'
+                        : 'mr-auto bg-gray-200 text-gray-900'
+                    }`}
+                >
+                    {message.Text}
+                </div>
                 ))}
             </section>
 
-            <TextBar
-                chat={chat}
-                type={type}
-                messages={messages}
-                setMessages={setMessages}
-            />
+            {/* TextBar */}
+            <div className="p-4 border-t border-gray-200 bg-indigo-50 rounded-b-lg">
+                <TextBar
+                    chat={chat}
+                    type={type}
+                    messages={messages}
+                    setMessages={setMessages}
+                />
+            </div>
         </div>
     );
 }

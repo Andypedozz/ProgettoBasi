@@ -26,15 +26,15 @@ app.get("/chats", async (req, res) => {
     const user = req.session.user;
     if(!user) {
         return res.status(401).json({ error: "Non autorizzato"});
-    }else{
-        const chatsQuery = "SELECT * FROM Chat WHERE ChatOwner = ?";
-        
-        try{
-            const chats = await fetchAll(db, chatsQuery, [user.Username]);
-            return res.json(chats);
-        }catch(err) {
-            return res.json({ error: err})
-        }
+    }
+
+    const chatsQuery = "SELECT * FROM Chat WHERE ChatOwner = ?";
+    
+    try{
+        const chats = await fetchAll(db, chatsQuery, [user.Username]);
+        return res.json(chats);
+    }catch(err) {
+        return res.json({ error: err})
     }
 });
 
@@ -43,16 +43,16 @@ app.get("/chat/:chatId", async (req, res) => {
     const user = req.session.user;
     if(!user) {
         return res.status(401).json({ error: "Non autorizzato"});
-    }else{
-        const chatId = req.params.chatId;
-        const chatQuery = "SELECT * FROM Message WHERE ChatId = ?";
-        
-        try{
-            const messages = await fetchAll(db, chatQuery, [chatId]);
-            return res.json(messages);
-        }catch(err) {
-            return res.json({ error: err})
-        }
+    }
+
+    const chatId = req.params.chatId;
+    const chatQuery = "SELECT * FROM Message WHERE ChatId = ?";
+    
+    try{
+        const messages = await fetchAll(db, chatQuery, [chatId]);
+        return res.json(messages);
+    }catch(err) {
+        return res.json({ error: err})
     }
 });
 
@@ -61,15 +61,15 @@ app.get("/groups", async (req, res) => {
     const user = req.session.user;
     if(!user) {
         return res.status(401).json({ error: "Non autorizzato"});
-    }else{
-        const groupsQuery = "SELECT * FROM GroupChat WHERE GroupOwner = ?";
-        
-        try{
-            const groups = await fetchAll(db, groupsQuery, [user.Username]);
-            return res.json(groups);
-        }catch(err) {
-            return res.json({ error: err})
-        }
+    }
+
+    const groupsQuery = "SELECT * FROM GroupChat WHERE GroupOwner = ?";
+    
+    try{
+        const groups = await fetchAll(db, groupsQuery, [user.Username]);
+        return res.json(groups);
+    }catch(err) {
+        return res.json({ error: err})
     }
 });
 
@@ -78,16 +78,16 @@ app.get("/group/:groupId", async (req, res) => {
     const user = req.session.user;
     if(!user) {
         return res.status(401).json({ error: "Non autorizzato"});
-    }else{
-        const groupId = req.params.groupId;
-        const groupQuery = "SELECT * FROM Message WHERE GroupId = ?";
-        
-        try{
-            const group = await fetchAll(db, groupQuery, [groupId]);
-            return res.json(group);
-        }catch(err) {
-            return res.json({ error: err})
-        }
+    }
+
+    const groupId = req.params.groupId;
+    const groupQuery = "SELECT * FROM Message WHERE GroupId = ?";
+    
+    try{
+        const group = await fetchAll(db, groupQuery, [groupId]);
+        return res.json(group);
+    }catch(err) {
+        return res.json({ error: err})
     }
 })
 
@@ -116,21 +116,50 @@ app.post("/addMessage", async (req, res) => {
     }
 });
 
+app.post("/signup", async (req, res) => {
+
+    const user = req.body;
+    const values = Object.values(user); 
+    const query = "INSERT INTO User (Username, Name, Surname, Number) VALUES (?,?,?,?)";
+
+    try{
+        await execute(db, query, values);
+        res.json(user);
+    }catch(err) {
+        console.error("Errore durante l'inserimento dell'utente: "+err);
+        res.status(500).json({ error: err.message});
+    }
+})
 
 // GET all Calls for current logged User
 app.get("/calls", async (req, res) => {
     const user = req.session.user;
     if(!user) {
         return res.status(401).json({ error: "Non autorizzato"});
-    }else{
-        const callsQuery = "SELECT * FROM Call WHERE CallOwner = ?";
-        
-        try{
-            const calls = await fetchAll(db, callsQuery, [user.Username]);
-            return res.json(calls);
-        }catch(err) {
-            return res.json({ error: err})
-        }
+    }
+    
+    const callsQuery = "SELECT * FROM Call WHERE CallOwner = ?";
+    
+    try{
+        const calls = await fetchAll(db, callsQuery, [user.Username]);
+        return res.json(calls);
+    }catch(err) {
+        return res.json({ error: err})
+    }
+});
+
+app.get("/contacts", async (req, res) => {
+    const user = req.session.user;
+    if(!user) {
+        return res.status(401).json({ error: "Non autorizzato"});
+    }
+    
+    const contactsQuery = "SELECT * FROM Contact WHERE ContactId IN (SELECT ContactId FROM Chat WHERE ChatOwner = ?);"
+    try{
+        const contacts = await fetchAll(db, contactsQuery, [user.Username]);
+        return res.json(contacts);
+    }catch(err) {
+        return res.json({ error: err})
     }
 });
 
@@ -156,6 +185,7 @@ app.post("/login", async (req, res) => {
         return res.json({ error: err})
     }
 });
+
 
 app.post("/logout", (req, res) => {
     req.session.user = null;
