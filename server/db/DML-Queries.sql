@@ -1,4 +1,3 @@
-INSERT INTO User ('Username','Name','Surname','Number') VALUES ('Andypedoz','Andrea','Pedini','3738729336');
 INSERT INTO User ('Username','Name','Surname','Number') VALUES ('Mark','Marco','Giurati','3738729336');
 INSERT INTO Contact ('ContactId','ContactName','ContactNumber','ContactSurname','Blocked','Reported','User') VALUES (0,'Luke','3615039277','Owens',0,0,'Mark');
 INSERT INTO Contact ('ContactId','ContactName','ContactNumber','ContactSurname','Blocked','Reported','User') VALUES (1,'Sarah','3903622275','Johnson',0,0,'Mark');
@@ -8,10 +7,10 @@ INSERT INTO Contact ('ContactId','ContactName','ContactNumber','ContactSurname',
 INSERT INTO Contact ('ContactId','ContactName','ContactNumber','ContactSurname','Blocked','Reported','User') VALUES (5,'Simon','3851480565','Cohens',0,0,'Mark');
 INSERT INTO Contact ('ContactId','ContactName','ContactNumber','ContactSurname','Blocked','Reported','User') VALUES (6,'Tim','3190831670','Evans',0,0,'Mark');
 INSERT INTO Contact ('ContactId','ContactName','ContactNumber','ContactSurname','Blocked','Reported','User') VALUES (7,'George','3545275828','Orwell',0,0,'Mark');
-INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (0,'Luke','11.09.2020',0,'Andypedoz',0);
-INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (1,'Sarah','11.09.2020',0,'Andypedoz',1);
-INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (2,'Lance','11.09.2020',0,'Andypedoz',2);
-INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (3,'Mark','11.09.2020',0,'Andypedoz',3);
+INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (0,'Luke','11.09.2020',0,'Mark',0);
+INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (1,'Sarah','11.09.2020',0,'Mark',1);
+INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (2,'Lance','11.09.2020',0,'Mark',2);
+INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (3,'Mark','11.09.2020',0,'Mark',3);
 INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (4,'Fred','11.09.2020',0,'Mark',4);
 INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (5,'Simon','11.09.2020',0,'Mark',5);
 INSERT INTO Chat ('ChatId','ChatName','CreationDate','Archived','ChatOwner','ContactId') VALUES (6,'Tim','11.09.2020',0,'Mark',6);
