@@ -160,6 +160,18 @@ app.get("/contacts", async (req, res) => {
     }
 });
 
+app.post("/createContact", (req, res) => {
+
+});
+
+app.post("/createChat", (req, res) => {
+    const contact = req.body;
+});
+
+app.post("/createGroup", (req, res) => {
+
+});
+
 app.post("/protocol/walk", (req, res) => {
     
 });

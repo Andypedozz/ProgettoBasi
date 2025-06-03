@@ -3,8 +3,13 @@ import ChatList from './ChatList';
 import Chat from './Chat/Chat';
 import CallCard from './Chat/CallCard';
 import ContactCard from './Chat/ContactCard';
+import NewContact from './NewContact';
+import NewChat from './NewChat';
+import NewGroup from './NewGroup';
 
-export default function MainPage({ user, setUser }) {
+export default function MainPage(props) {
+    const user = props.user;
+    const setUser = props.setUser;
     const [items, setItems] = useState([]);
     const [endpoint, setEndpoint] = useState('');
     const [loading, setLoading] = useState(false);
@@ -12,6 +17,10 @@ export default function MainPage({ user, setUser }) {
     const [chat, setChat] = useState(null);
     const [call, setCall] = useState(null);
     const [contact, setContact] = useState(null);
+    const [sidebar, setSidebar] = useState(true);
+    const [newContact, setNewContact] = useState(false);
+    const [newChat, setNewChat] = useState(false);
+    const [newGroup, setNewGroup] = useState(false);
 
     const fetchData = async (path) => {
         try {
@@ -58,9 +67,44 @@ export default function MainPage({ user, setUser }) {
         );
     };
 
+    const handleCreateAction = (e) => {
+        e.preventDefault();
+        const id = e.target.id;
+        if(id === "sidebar") {
+            setNewContact(false);
+            setNewChat(false);
+            setNewGroup(false);
+            setSidebar(true);
+        }else{
+            setSidebar(false);
+            if(id === "newContact") {
+                setNewContact(true);
+            }else if(id === "newChat") {
+                setNewChat(true);
+            }else {
+                setNewGroup(true);
+            }
+        }
+    }
+
     return (
         <div className="h-screen w-screen flex bg-gray-100 text-gray-900 ">
+        <aside className="w-[10%] bg-white p-6 overflow-y-auto shadow-lg rounded-l-lg">
+            <button id="sidebar" className="w-12 h-12 rounded-full overflow-hidden bg-indigo-300 flex items-center justify-center text-white text-lg font-semibold hover:bg-indigo-200 transition mt-3" onClick={(e) => handleCreateAction(e)}>
+                ☰
+            </button>
+            <button id="newContact" className="w-12 h-12 rounded-full overflow-hidden bg-indigo-300 flex items-center justify-center text-white text-lg font-semibold hover:bg-indigo-200 transition mt-3" onClick={(e) => handleCreateAction(e)}>
+                👤
+            </button>
+            <button id="newChat" className="w-12 h-12 rounded-full overflow-hidden bg-indigo-300 flex items-center justify-center text-white text-lg font-semibold hover:bg-indigo-200 transition mt-3" onClick={(e) => handleCreateAction(e)}>
+                💬
+            </button>
+            <button id="newGroup" className="w-12 h-12 rounded-full overflow-hidden bg-indigo-300 flex items-center justify-center text-white text-lg font-semibold hover:bg-indigo-200 transition mt-3" onClick={(e) => handleCreateAction(e)}>
+                👥
+            </button>
+        </aside>
         {/* Sidebar */}
+        {sidebar && (
         <aside className="w-[25%] bg-white p-6 flex flex-col justify-between shadow-lg">
             <div>
             <button
@@ -90,7 +134,22 @@ export default function MainPage({ user, setUser }) {
 
             <div className="overflow-y-auto flex-1 mt-6">{renderContent()}</div>
         </aside>
+        )}
 
+        {/* New contact area */}
+        {newContact && (
+            <NewContact />
+        )}
+
+        {/* New chat area */}
+        {newChat && (
+            <NewChat contacts={items} user={user}/>
+        )}
+
+        {/* New group area */}
+        {newGroup && (
+            <NewGroup contacts={items}/>
+        )}
         {/* Chat area */}
         <main className="w-[100%] bg-white border-x border-gray-200 overflow-y-auto flex flex-col shadow-inner rounded-r-lg">
             {chat && <Chat chat={chat} type={endpoint} />}
