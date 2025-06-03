@@ -4,8 +4,10 @@ export default function ChatList({ data, type, setChat, setCall, setContact }) {
         if (type === 'chats' || type === 'groups') {
             setChat(item);
         } else if(type === 'calls') {
+            setContact(null);
             setCall(item);
         }else{
+            setCall(null)
             setContact(item);
         }
     };

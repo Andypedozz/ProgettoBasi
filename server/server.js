@@ -104,10 +104,7 @@ app.post("/addMessage", async (req, res) => {
         const nextId = (maxIdRow.maxId || 0) + 1;
         message.MessageId = nextId;
 
-        const values = message.ChatId
-            ? [message.Text, message.Read, message.Pinned, message.Datetime, message.SentReceived, message.ChatId, message.MessageId]
-            : [message.Text, message.Read, message.Pinned, message.Datetime, message.SentReceived, message.GroupId, message.MessageId];
-
+        const values = Object.values(message);
         await execute(db, addMessageQuery, values);
         res.json({ message: "Successfully added message" });
     } catch (err) {
