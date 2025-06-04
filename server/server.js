@@ -96,8 +96,8 @@ app.post("/addMessage", async (req, res) => {
 
     const maxIdQuery = "SELECT max(MessageId) as maxId FROM Message";
     const addMessageQuery = message.ChatId
-        ? "INSERT INTO Message (Text, Read, Pinned, Datetime, SentReceived, ChatId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?)"
-        : "INSERT INTO Message (Text, Read, Pinned, Datetime, SentReceived, GroupId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        ? "INSERT INTO Message (Text, Read, Pinned, Date, Time, SentReceived, ChatId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        : "INSERT INTO Message (Text, Read, Pinned, Date, Time, SentReceived, GroupId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     try {
         const maxIdRow = await fetchFirst(db, maxIdQuery);

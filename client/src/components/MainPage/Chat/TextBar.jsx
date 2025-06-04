@@ -3,13 +3,19 @@ import { useState } from 'react';
 export default function TextBar({ chat, type, messages, setMessages }) {
     const [text, setText] = useState('');
 
-    const formatDatetime = () => {
+    const formatTime = () => {
         const now = new Date();
         const pad = (n) => n.toString().padStart(2, '0');
 
-        return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ` +
-               `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        return `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     };
+
+    const formatDate = () => {
+        const now = new Date();
+        const pad = (n) => n.toString().padStart(2, '0');
+
+        return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    }
 
     const handleSend = async () => {
         const trimmed = text.trim();
@@ -19,7 +25,8 @@ export default function TextBar({ chat, type, messages, setMessages }) {
             Text: trimmed,
             Read: 0,
             Pinned: 0,
-            Datetime: formatDatetime(),
+            Date: formatDate(),
+            Time: formatTime(),
             SentReceived: 1,
             ...(type === 'chats' && { ChatId: chat.ChatId }),
             ...(type === 'groups' && { GroupId: chat.GroupId }),
