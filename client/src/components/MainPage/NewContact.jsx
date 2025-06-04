@@ -2,12 +2,16 @@
 export default function NewContact(props) {
 
     const user = props.user;
+    const items = props.items;
+    const setItems = props.setItems;
+    const type = props.type;
+
     const createNewContact = (e) => {
         e.preventDefault();
 
-        const name = e.target.name;
-        const surname = e.target.surname;
-        const phone = e.target.phone;
+        const name = e.target.name.value.trim();
+        const surname = e.target.surname.value.trim();
+        const phone = e.target.phone.value.trim();
 
         const contact = {
             ContactName : name,
@@ -23,17 +27,19 @@ export default function NewContact(props) {
             headers : {
                 "Content-Type" : "application/json"
             },
-            body : JSON.stringify()
+            body : JSON.stringify(contact)
         })
         .then(response => response.json())
         .then(data => {
-
+            if(type === "contacts") {
+                set
+            }
         });
     }
 
     return (
         <div className="w-[25%] bg-white p-6 shadow-lg">
-            <form action="" className="flex flex-col gap-3">
+            <form onSubmit={createNewContact} className="flex flex-col gap-3">
                 <h2 className="font-bold">Create a new Contact</h2>
                 <label htmlFor="name" className="text-gray-700 font-semibold">Name</label>
                 <input type="text" name="name" id="name" className="bg-gray-100 border border-gray-300 rounded-md px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"/>

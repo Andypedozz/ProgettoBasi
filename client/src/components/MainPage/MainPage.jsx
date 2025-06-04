@@ -23,18 +23,20 @@ export default function MainPage(props) {
     const [newGroup, setNewGroup] = useState(false);
 
     const fetchData = async (path) => {
-        try {
-            setLoading(true);
-            setHasFetched(true);
-            const res = await fetch(`/api/${path}`);
-            if (!res.ok) throw new Error('Errore nella richiesta');
-            const data = await res.json();
-            setItems(data);
-            setEndpoint(path);
-        } catch (err) {
-            console.error('Errore nel fetch:', err);
-        } finally {
-            setLoading(false);
+        if(path !== endpoint) {
+            try {
+                setLoading(true);
+                setHasFetched(true);
+                const res = await fetch(`/api/${path}`);
+                if (!res.ok) throw new Error('Errore nella richiesta');
+                const data = await res.json();
+                setItems(data);
+                setEndpoint(path);
+            } catch (err) {
+                console.error('Errore nel fetch:', err);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -105,7 +107,7 @@ export default function MainPage(props) {
         </aside>
         {/* Sidebar */}
         {sidebar && (
-        <aside className="w-[25%] bg-white p-6 flex flex-col justify-between shadow-lg">
+        <aside className="w-[45%] bg-white p-6 flex flex-col justify-between shadow-lg">
             <div>
             <button
                 onClick={disconnect}
@@ -138,7 +140,7 @@ export default function MainPage(props) {
 
         {/* New contact area */}
         {newContact && (
-            <NewContact />
+            <NewContact user={user} items={items} setItems={setItems} type={endpoint}/>
         )}
 
         {/* New chat area */}
@@ -150,6 +152,7 @@ export default function MainPage(props) {
         {newGroup && (
             <NewGroup contacts={items}/>
         )}
+        
         {/* Chat area */}
         <main className="w-[100%] bg-white border-x border-gray-200 overflow-y-auto flex flex-col shadow-inner rounded-r-lg">
             {chat && <Chat chat={chat} type={endpoint} />}

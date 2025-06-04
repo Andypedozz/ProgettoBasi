@@ -88,9 +88,10 @@ CREATE TABLE Message (
 	Read	INTEGER NOT NULL,
 	Pinned	INTEGER DEFAULT 0,
 	ChatId	INTEGER,
-	Datetime	TEXT NOT NULL,
+	Time	TEXT NOT NULL,
 	SentReceived	INTEGER NOT NULL,
 	GroupId	INTEGER,
+	Date	TEXT,
 	PRIMARY KEY(MessageId),
 	FOREIGN KEY(ChatId) REFERENCES Chat(ChatId),
 	FOREIGN KEY(GroupId) REFERENCES GroupChat(GroupId),
@@ -101,7 +102,7 @@ CREATE TABLE Message (
 
 CREATE TABLE Attachement (
 	AttachementId	INTEGER,
-	Blob	BLOB NOT NULL,
+	Path	TEXT NOT NULL,
 	MessageId	INTEGER NOT NULL,
 	PRIMARY KEY(AttachementId),
 	FOREIGN KEY(MessageId) REFERENCES Message(MessageId)
@@ -109,7 +110,7 @@ CREATE TABLE Attachement (
 
 CREATE TABLE Media (
 	MediaId	INTEGER,
-	Blob	BLOB NOT NULL,
+	Path	TEXT NOT NULL,
 	Type	TEXT NOT NULL,
 	MessageId	INTEGER NOT NULL,
 	PRIMARY KEY(MediaId),

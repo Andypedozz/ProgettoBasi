@@ -1,5 +1,12 @@
 
-export default function ChatList({ data, type, setChat, setCall, setContact }) {
+export default function ChatList(props) {
+
+    const data = props.data;
+    const type = props.type;
+    const setChat = props.setChat;
+    const setCall = props.setCall;
+    const setContact = props.setContact;
+
     const openItem = (item) => {
         if (type === 'chats' || type === 'groups') {
             setChat(item);

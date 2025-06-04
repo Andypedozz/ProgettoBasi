@@ -151,7 +151,7 @@ app.get("/contacts", async (req, res) => {
         return res.status(401).json({ error: "Non autorizzato"});
     }
     
-    const contactsQuery = "SELECT * FROM Contact WHERE ContactId IN (SELECT ContactId FROM Chat WHERE ChatOwner = ?);"
+    const contactsQuery = "SELECT * FROM Contact WHERE User = ?;"
     try{
         const contacts = await fetchAll(db, contactsQuery, [user.Username]);
         return res.json(contacts);
@@ -160,12 +160,44 @@ app.get("/contacts", async (req, res) => {
     }
 });
 
-app.post("/createContact", (req, res) => {
+app.post("/createContact", async (req, res) => {
+    const contact = req.body;
 
+    const maxIdQuery = "SELECT max(ContactId) as maxId FROM Contact";
+    const addMessageQuery = "INSERT INTO Contact (ContactName, ContactSurname, ContactNumber, Blocked, Reported, User, ContactId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    try {
+        const maxIdRow = await fetchFirst(db, maxIdQuery);
+        const nextId = (maxIdRow.maxId || 0) + 1;
+        contact.ContactId = nextId;
+
+        const values = Object.values(contact);
+        await execute(db, addMessageQuery, values);
+        res.json({ message: "Successfully added contact" });
+    } catch (err) {
+        console.error("Errore durante inserimento contatto:", err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
-app.post("/createChat", (req, res) => {
-    const contact = req.body;
+app.post("/createChat", async (req, res) => {
+    const chat = req.body;
+
+    const maxIdQuery = "SELECT max(ChatId) as maxId FROM Chat";
+    const addMessageQuery = "INSERT INTO Chat (ChatName, CreationDate, Archived, ChatOwner, ContactId, ChatId) VALUES (?, ?, ?, ?, ?, ?)";
+
+    try {
+        const maxIdRow = await fetchFirst(db, maxIdQuery);
+        const nextId = (maxIdRow.maxId || 0) + 1;
+        chat.ChatId = nextId;
+
+        const values = Object.values(chat);
+        await execute(db, addMessageQuery, values);
+        res.json({ message: "Successfully added chat" });
+    } catch (err) {
+        console.error("Errore durante inserimento chat:", err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 app.post("/createGroup", (req, res) => {
