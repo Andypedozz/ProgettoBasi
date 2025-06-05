@@ -1,4 +1,3 @@
-
 export default function ChatList(props) {
 
     const data = props.data;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChatList from './ChatList';
 import Chat from './Chat/Chat';
 import CallCard from './Chat/CallCard';
@@ -10,35 +10,47 @@ import NewGroup from './NewGroup';
 export default function MainPage(props) {
     const user = props.user;
     const setUser = props.setUser;
-    const [items, setItems] = useState([]);
-    const [endpoint, setEndpoint] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [hasFetched, setHasFetched] = useState(false);
+
+    const [chats, setChats] = useState([]);
+    const [groups, setGroups] = useState([]);
+    const [calls, setCalls] = useState([]);
+    const [contacts, setContacts] = useState([]);
+
+    const [showedData, setShowedData] = useState('');
+
     const [chat, setChat] = useState(null);
     const [call, setCall] = useState(null);
     const [contact, setContact] = useState(null);
-    const [sidebar, setSidebar] = useState(true);
-    const [newContact, setNewContact] = useState(false);
-    const [newChat, setNewChat] = useState(false);
-    const [newGroup, setNewGroup] = useState(false);
 
-    const fetchData = async (path) => {
-        if(path !== endpoint) {
-            try {
-                setLoading(true);
-                setHasFetched(true);
-                const res = await fetch(`/api/${path}`);
-                if (!res.ok) throw new Error('Errore nella richiesta');
-                const data = await res.json();
-                setItems(data);
-                setEndpoint(path);
-            } catch (err) {
-                console.error('Errore nel fetch:', err);
-            } finally {
-                setLoading(false);
+    const [sidebar, setSidebar] = useState(true);
+    const [newItem, setNewItem] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try{
+                const chatsRes = await fetch('/api/chats');
+                const groupsRes = await fetch('/api/groups');
+                const callsRes = await fetch('/api/calls');
+                const contactsRes = await fetch('/api/contacts');
+
+                const chats = await chatsRes.json();
+                const groups = await groupsRes.json();
+                const calls = await callsRes.json();
+                const contacts = await contactsRes.json();
+                
+                setChats(chats);
+                setGroups(groups);
+                setCalls(calls);
+                setContacts(contacts);
+                setShowedData('');
+            }catch(err) {
+                //
             }
         }
-    };
+
+        fetchData();
+    }, []);
+
 
     const disconnect = async () => {
         try {
@@ -52,40 +64,28 @@ export default function MainPage(props) {
         }
     };
 
-    const renderContent = () => {
-        if (!hasFetched || loading) return null;
-        if (items.length === 0) return <p>Nessun elemento trovato.</p>;
-
-        return (
-            <ChatList
-                data={items}
-                type={endpoint}
-                chat={chat}
-                setChat={setChat}
-                call={call}
-                setCall={setCall}
-                setContact={setContact}
-            />
-        );
-    };
+    const getData = (type) => {
+        switch (type) {
+            case 'chats':
+                return chats;
+            case 'groups':
+                return groups;
+            case 'calls':
+                return calls;
+            case 'contacts':
+                return contacts;
+        }
+    }
 
     const handleCreateAction = (e) => {
         e.preventDefault();
         const id = e.target.id;
         if(id === "sidebar") {
-            setNewContact(false);
-            setNewChat(false);
-            setNewGroup(false);
+            setNewItem('');
             setSidebar(true);
         }else{
             setSidebar(false);
-            if(id === "newContact") {
-                setNewContact(true);
-            }else if(id === "newChat") {
-                setNewChat(true);
-            }else {
-                setNewGroup(true);
-            }
+            setNewItem(id);
         }
     }
 
@@ -125,7 +125,7 @@ export default function MainPage(props) {
                 {['chats', 'groups', 'calls','contacts'].map((type) => (
                 <button
                     key={type}
-                    onClick={() => fetchData(type)}
+                    onClick={() => setShowedData(type)}
                     className="w-full text-left px-4 py-2 bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100 transition"
                 >
                     {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -134,28 +134,32 @@ export default function MainPage(props) {
             </section>
             </div>
 
-            <div className="overflow-y-auto flex-1 mt-6">{renderContent()}</div>
+            <div className="overflow-y-auto flex-1 mt-6">
+                {showedData !== '' && <ChatList
+                    data={getData(showedData)}
+                    type={showedData}
+                    chat={chat}
+                    setChat={setChat}
+                    call={call}
+                    setCall={setCall}
+                    setContact={setContact}
+                />}
+            </div>
         </aside>
         )}
 
-        {/* New contact area */}
-        {newContact && (
-            <NewContact user={user} items={items} setItems={setItems} type={endpoint}/>
-        )}
-
-        {/* New chat area */}
-        {newChat && (
-            <NewChat contacts={items} user={user}/>
-        )}
-
-        {/* New group area */}
-        {newGroup && (
-            <NewGroup contacts={items}/>
+        {/* New item area */}
+        {(newItem == 'newContact')? (
+            <NewContact user={user} type={showedData}/>
+        ) : (newItem == 'newChat')? (
+            <NewChat contacts={contacts} user={user}/>
+        ) : (
+            <NewGroup contacts={contacts}/>
         )}
         
         {/* Chat area */}
         <main className="w-[100%] bg-white border-x border-gray-200 overflow-y-auto flex flex-col shadow-inner rounded-r-lg">
-            {chat && <Chat chat={chat} type={endpoint} />}
+            {chat && <Chat chat={chat} type={showedData} />}
         </main>
 
         {/* Call card area */}

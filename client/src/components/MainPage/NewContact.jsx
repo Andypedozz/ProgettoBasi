@@ -2,9 +2,6 @@
 export default function NewContact(props) {
 
     const user = props.user;
-    const items = props.items;
-    const setItems = props.setItems;
-    const type = props.type;
 
     const createNewContact = (e) => {
         e.preventDefault();
@@ -31,9 +28,6 @@ export default function NewContact(props) {
         })
         .then(response => response.json())
         .then(data => {
-            if(type === "contacts") {
-                set
-            }
         });
     }
 
