@@ -28,7 +28,7 @@ app.get("/chats", async (req, res) => {
         return res.status(401).json({ error: "Non autorizzato"});
     }
 
-    const chatsQuery = "SELECT * FROM Chat WHERE ChatOwner = ?";
+    const chatsQuery = "SELECT * FROM Chat WHERE ChatName IN (SELECT ContactName FROM Contact WHERE User = ?)";
     
     try{
         const chats = await fetchAll(db, chatsQuery, [user.Username]);
@@ -135,7 +135,11 @@ app.get("/calls", async (req, res) => {
         return res.status(401).json({ error: "Non autorizzato"});
     }
     
-    const callsQuery = "SELECT * FROM Call WHERE CallOwner = ?";
+    const callsQuery = `SELECT * FROM Call WHERE CallId IN (
+	    SELECT CallId FROM Participation WHERE ContactId IN (
+		    SELECT ContactId FROM Contact WHERE User = ?
+	    )
+    )`
     
     try{
         const calls = await fetchAll(db, callsQuery, [user.Username]);
@@ -180,11 +184,27 @@ app.post("/createContact", async (req, res) => {
     }
 });
 
+const formatDate = () => {
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
 app.post("/createChat", async (req, res) => {
-    const chat = req.body;
+    const contact = req.body;
+
+    const creationDate = formatDate();
+
+    const chat = {
+        ChatName : contact.ContactName,
+        CreationDate :  creationDate,
+        Archived : 0,
+        ContactId : contact.ContactId
+    };
 
     const maxIdQuery = "SELECT max(ChatId) as maxId FROM Chat";
-    const addMessageQuery = "INSERT INTO Chat (ChatName, CreationDate, Archived, ChatOwner, ContactId, ChatId) VALUES (?, ?, ?, ?, ?, ?)";
+    const addMessageQuery = "INSERT INTO Chat (ChatName, CreationDate, Archived, ContactId, ChatId) VALUES (?, ?, ?, ?, ?)";
 
     try {
         const maxIdRow = await fetchFirst(db, maxIdQuery);
