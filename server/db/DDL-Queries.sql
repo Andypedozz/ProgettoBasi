@@ -1,15 +1,22 @@
 CREATE TABLE User (
 	Name	TEXT NOT NULL,
 	Surname	TEXT NOT NULL,
-	Number	TEXT NOT NULL,
+	PhoneNumber	TEXT NOT NULL,
 	Username	TEXT,
 	PRIMARY KEY(Username)
+)
+
+CREATE TABLE Call (
+	CallId	INTEGER,
+	StartTime	TEXT NOT NULL,
+	EndTime	TEXT NOT NULL,
+	PRIMARY KEY(CallId)
 )
 
 CREATE TABLE Setting (
 	SettingId	INTEGER,
 	FontSize	INTEGER NOT NULL DEFAULT 12,
-	Background	BLOB NOT NULL,
+	Background	TEXT NOT NULL,
 	OnlineVisible	INTEGER NOT NULL DEFAULT 1,
 	LastOnline	INTEGER NOT NULL DEFAULT 1,
 	PhotoVisible	INTEGER NOT NULL DEFAULT 1,
@@ -28,9 +35,9 @@ CREATE TABLE Contact (
 	ContactSurname	TEXT NOT NULL,
 	Blocked	INTEGER DEFAULT 0,
 	Reported	INTEGER DEFAULT 0,
-	User	TEXT NOT NULL,
+	ContactOwner	TEXT NOT NULL,
 	PRIMARY KEY(ContactId),
-	FOREIGN KEY(User) REFERENCES User(Username),
+	FOREIGN KEY(ContactOwner) REFERENCES User(Username),
 	CHECK(Blocked IN (0, 1)),
 	CHECK(Reported IN (0, 1))
 )
@@ -45,7 +52,7 @@ CREATE TABLE GroupChat (
 	FOREIGN KEY(GroupOwner) REFERENCES User(Username)
 )
 
-CREATE TABLE Member (
+CREATE TABLE Membership (
 	GroupId	TEXT,
 	ContactId	INTEGER,
 	PRIMARY KEY(GroupId,ContactId),
@@ -70,14 +77,11 @@ CREATE TABLE Participation (
 )
 
 CREATE TABLE Chat (
-	ChatName	TEXT NOT NULL,
 	CreationDate	DATE NOT NULL,
 	Archived	INTEGER DEFAULT 0,
-	ChatOwner	TEXT NOT NULL,
 	ChatId	INTEGER,
 	ContactId	INTEGER NOT NULL,
 	PRIMARY KEY(ChatId),
-	FOREIGN KEY(ChatOwner) REFERENCES User(Username),
 	FOREIGN KEY(ContactId) REFERENCES Contact(ContactId),
 	CHECK(Archived IN (0, 1))
 )
@@ -91,8 +95,13 @@ CREATE TABLE Message (
 	Time	TEXT NOT NULL,
 	SentReceived	INTEGER NOT NULL,
 	GroupId	INTEGER,
-	Date	TEXT,
+	Date	TEXT NOT NULL,
+	MediaPath	TEXT,
+	MessageType	TEXT NOT NULL,
+	PollTitle	TEXT,
+	AuthorId	INTEGER,
 	PRIMARY KEY(MessageId),
+	FOREIGN KEY(AuthorId) REFERENCES Contact(ContactId),
 	FOREIGN KEY(ChatId) REFERENCES Chat(ChatId),
 	FOREIGN KEY(GroupId) REFERENCES GroupChat(GroupId),
 	CHECK(Read IN (0, 1)),
@@ -100,30 +109,6 @@ CREATE TABLE Message (
 	CHECK(SentReceived IN (0, 1))
 )
 
-CREATE TABLE Attachement (
-	AttachementId	INTEGER,
-	Path	TEXT NOT NULL,
-	MessageId	INTEGER NOT NULL,
-	PRIMARY KEY(AttachementId),
-	FOREIGN KEY(MessageId) REFERENCES Message(MessageId)
-)
-
-CREATE TABLE Media (
-	MediaId	INTEGER,
-	Path	TEXT NOT NULL,
-	Type	TEXT NOT NULL,
-	MessageId	INTEGER NOT NULL,
-	PRIMARY KEY(MediaId),
-	FOREIGN KEY(MessageId) REFERENCES Message(MessageId)
-)
-
-CREATE TABLE Poll (
-	PollId	INTEGER,
-	Title	TEXT NOT NULL,
-	MessageId	INTEGER NOT NULL,
-	PRIMARY KEY(PollId),
-	FOREIGN KEY(MessageId) REFERENCES Message(MessageId)
-)
 
 CREATE TABLE OptionsList (
 	OptionsListId	INTEGER,
@@ -131,7 +116,7 @@ CREATE TABLE OptionsList (
 	Clicks	INTEGER DEFAULT 0,
 	PollId	INTEGER NOT NULL,
 	PRIMARY KEY(OptionsListId),
-	FOREIGN KEY(PollId) REFERENCES Poll(PollId)
+	FOREIGN KEY(PollId) REFERENCES Message(MessageId)
 )
 
 CREATE TABLE Draft (
