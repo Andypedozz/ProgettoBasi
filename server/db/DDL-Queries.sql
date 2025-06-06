@@ -60,15 +60,6 @@ CREATE TABLE Membership (
 	FOREIGN KEY(GroupId) REFERENCES GroupChat(GroupId)
 )
 
-CREATE TABLE Call (
-	CallId	INTEGER,
-	StartTime	TEXT NOT NULL,
-	EndTime	TEXT NOT NULL,
-	CallOwner	TEXT NOT NULL,
-	PRIMARY KEY(CallId),
-	FOREIGN KEY(CallOwner) REFERENCES User(Username)
-)
-
 CREATE TABLE Participation (
 	CallId	INTEGER,
 	ContactId	INTEGER,
