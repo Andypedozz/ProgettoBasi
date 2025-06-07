@@ -25,30 +25,37 @@ export default function MainPage(props) {
     const [sidebar, setSidebar] = useState(true);
     const [newItem, setNewItem] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try{
-                const chatsRes = await fetch('/api/chats');
-                const groupsRes = await fetch('/api/groups');
-                const callsRes = await fetch('/api/calls');
-                const contactsRes = await fetch('/api/contacts');
+    const fetchData = async (type) => {
+        try{
+            const dataRes = await fetch('/api/'+type);
 
-                const chats = await chatsRes.json();
-                const groups = await groupsRes.json();
-                const calls = await callsRes.json();
-                const contacts = await contactsRes.json();
-                
-                setChats(chats);
-                setGroups(groups);
-                setCalls(calls);
-                setContacts(contacts);
-                setShowedData('');
-            }catch(err) {
-                //
+            const data = await dataRes.json();
+            
+            switch(type) {
+                case 'chats':
+                    setChats(data);
+                    break;
+                case 'groups':
+                    setGroups(data);
+                    break;
+                case 'calls':
+                    setCalls(data);
+                    break;
+                case 'contacts':
+                    setContacts(data);
+                    break;
             }
+        }catch(err) {
+            //
         }
+    }
 
-        fetchData();
+    useEffect(() => {
+        fetchData('chats');
+        fetchData('groups');
+        fetchData('calls');
+        fetchData('contacts');
+        setShowedData('');
     }, []);
 
 
@@ -150,7 +157,7 @@ export default function MainPage(props) {
 
         {/* New item area */}
         {(newItem == 'newContact')? (
-            <NewContact user={user} type={showedData}/>
+            <NewContact fetchData={fetchData} user={user} type={showedData}/>
         ) : (newItem == 'newChat')? (
             <NewChat contacts={contacts} user={user}/>
         ) : (

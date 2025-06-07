@@ -18,7 +18,7 @@ export default function CallCard(props) {
 
             <div className="space-y-6 text-gray-700">
                 {[
-                    { label: 'Date', value: call.Date },
+                    { label: 'Contact', value: call.ContactName },
                     { label: 'Start time', value: call.StartTime },
                     { label: 'End time', value: call.EndTime },
                     ].map(({ label, value }) => (

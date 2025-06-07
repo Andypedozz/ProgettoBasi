@@ -2,6 +2,7 @@
 export default function NewContact(props) {
 
     const user = props.user;
+    const fetchData = props.fetchData;
 
     const createNewContact = (e) => {
         e.preventDefault();
@@ -28,6 +29,7 @@ export default function NewContact(props) {
         })
         .then(response => response.json())
         .then(data => {
+            fetchData('contacts');
         });
     }
 

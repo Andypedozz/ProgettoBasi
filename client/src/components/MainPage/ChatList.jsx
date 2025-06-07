@@ -1,3 +1,5 @@
+import { getAvatar, getLabel, getTitle } from "../utils";
+
 export default function ChatList(props) {
 
     const data = props.data;
@@ -18,36 +20,9 @@ export default function ChatList(props) {
         }
     };
 
-    const getTitle = () => {
-        switch (type) {
-            case 'chats':
-                return 'Chat';
-            case 'groups':
-                return 'Gruppi';
-            case 'calls':
-                return 'Chiamate';
-            case 'contacts':
-                return 'Contatti';
-            default:
-                return 'Elementi';
-        }
-    };
-
-    const getAvatar = (item) => {
-        if (type === 'chats') return item.ChatName?.charAt(0).toUpperCase() || '?';
-        if (type === 'groups') return item.GroupName?.charAt(0).toUpperCase() || '?';
-        if (type === 'calls') return item.CallId || '?';
-        if (type === 'contacts') return item.ContactName?.charAt(0).toUpperCase() || '?';
-        return '?';
-    };
-
-    const getLabel = (item) => {
-        return item.ChatName || item.GroupName || item.ContactName || `Call ${item.CallId}`;
-    };
-
     return (
         <div className="space-y-4 px-3">
-            <h3 className="text-lg font-semibold text-gray-900 mb-5">{getTitle()}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-5">{getTitle(type)}</h3>
 
             {data.map((item, index) => (
                 <div

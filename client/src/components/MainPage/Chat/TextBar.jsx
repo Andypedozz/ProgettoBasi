@@ -1,21 +1,13 @@
 import { useState } from 'react';
+import { formatDate, formatTime } from '../../utils';
 
-export default function TextBar({ chat, type, messages, setMessages }) {
+export default function TextBar(props) {
+    const chat = props.chat;
+    const type = props.type;
+    const messages = props.messages;
+    const setMessages = props.messages;
+
     const [text, setText] = useState('');
-
-    const formatTime = () => {
-        const now = new Date();
-        const pad = (n) => n.toString().padStart(2, '0');
-
-        return `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    };
-
-    const formatDate = () => {
-        const now = new Date();
-        const pad = (n) => n.toString().padStart(2, '0');
-
-        return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-    }
 
     const handleSend = async () => {
         const trimmed = text.trim();
@@ -30,6 +22,10 @@ export default function TextBar({ chat, type, messages, setMessages }) {
             SentReceived: 1,
             ...(type === 'chats' && { ChatId: chat.ChatId }),
             ...(type === 'groups' && { GroupId: chat.GroupId }),
+            MediaPath : '',
+            MessageType : 'text',
+            PollTitle : '',
+            AuthorId : null
         };
 
         try {

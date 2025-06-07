@@ -21,6 +21,13 @@ const db = new sqlite3.Database("server/db/Project.db", (err) => {
     else console.log("Connesso al database SQLite");     
 });
 
+const formatDate = () => {
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
 // GET all Chats for current logged User
 app.get("/chats", async (req, res) => {
     const user = req.session.user;
@@ -28,8 +35,11 @@ app.get("/chats", async (req, res) => {
         return res.status(401).json({ error: "Non autorizzato"});
     }
 
-    const chatsQuery = "SELECT * FROM Chat WHERE ChatName IN (SELECT ContactName FROM Contact WHERE User = ?)";
-    
+    const chatsQuery = `SELECT Chat.ChatId, Contact.ContactName, Contact.ContactSurname, Contact.ContactNumber, Chat.CreationDate, 
+                        Chat.Archived
+                        FROM Chat INNER JOIN Contact ON Chat.ContactId = Contact.ContactId
+                        WHERE Contact.ContactOwner = ?`;
+
     try{
         const chats = await fetchAll(db, chatsQuery, [user.Username]);
         return res.json(chats);
@@ -91,13 +101,49 @@ app.get("/group/:groupId", async (req, res) => {
     }
 })
 
+// GET all Calls for current logged User
+app.get("/calls", async (req, res) => {
+    const user = req.session.user;
+    if(!user) {
+        return res.status(401).json({ error: "Non autorizzato"});
+    }
+    
+    const callsQuery = `SELECT Contact.ContactName, Call.*
+                        FROM Contact, Call, Participation
+                        WHERE Contact.ContactId = Participation.ContactId
+                        AND Participation.CallId = Call.CallId
+                        AND Contact.ContactOwner = ?;`
+    
+    try{
+        const calls = await fetchAll(db, callsQuery, [user.Username]);
+        return res.json(calls);
+    }catch(err) {
+        return res.json({ error: err})
+    }
+});
+
+app.get("/contacts", async (req, res) => {
+    const user = req.session.user;
+    if(!user) {
+        return res.status(401).json({ error: "Non autorizzato"});
+    }
+    
+    const contactsQuery = "SELECT * FROM Contact WHERE ContactOwner = ?;"
+    try{
+        const contacts = await fetchAll(db, contactsQuery, [user.Username]);
+        return res.json(contacts);
+    }catch(err) {
+        return res.json({ error: err})
+    }
+});
+
 app.post("/addMessage", async (req, res) => {
     const message = req.body;
 
     const maxIdQuery = "SELECT max(MessageId) as maxId FROM Message";
     const addMessageQuery = message.ChatId
-        ? "INSERT INTO Message (Text, Read, Pinned, Date, Time, SentReceived, ChatId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        : "INSERT INTO Message (Text, Read, Pinned, Date, Time, SentReceived, GroupId, MessageId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        ? "INSERT INTO Message (Text, Read, Pinned, Date, Time, SentReceived, ChatId, MediaPath, MessageType, PollTitle, AuthorId, MessageId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+        : "INSERT INTO Message (Text, Read, Pinned, Date, Time, SentReceived, GroupId, MediaPath, MessageType, PollTitle, AuthorId, MessageId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
     try {
         const maxIdRow = await fetchFirst(db, maxIdQuery);
@@ -128,47 +174,11 @@ app.post("/signup", async (req, res) => {
     }
 })
 
-// GET all Calls for current logged User
-app.get("/calls", async (req, res) => {
-    const user = req.session.user;
-    if(!user) {
-        return res.status(401).json({ error: "Non autorizzato"});
-    }
-    
-    const callsQuery = `SELECT * FROM Call WHERE CallId IN (
-	    SELECT CallId FROM Participation WHERE ContactId IN (
-		    SELECT ContactId FROM Contact WHERE User = ?
-	    )
-    )`
-    
-    try{
-        const calls = await fetchAll(db, callsQuery, [user.Username]);
-        return res.json(calls);
-    }catch(err) {
-        return res.json({ error: err})
-    }
-});
-
-app.get("/contacts", async (req, res) => {
-    const user = req.session.user;
-    if(!user) {
-        return res.status(401).json({ error: "Non autorizzato"});
-    }
-    
-    const contactsQuery = "SELECT * FROM Contact WHERE User = ?;"
-    try{
-        const contacts = await fetchAll(db, contactsQuery, [user.Username]);
-        return res.json(contacts);
-    }catch(err) {
-        return res.json({ error: err})
-    }
-});
-
 app.post("/createContact", async (req, res) => {
     const contact = req.body;
 
     const maxIdQuery = "SELECT max(ContactId) as maxId FROM Contact";
-    const addMessageQuery = "INSERT INTO Contact (ContactName, ContactSurname, ContactNumber, Blocked, Reported, User, ContactId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const addMessageQuery = "INSERT INTO Contact (ContactName, ContactSurname, ContactNumber, Blocked, Reported, ContactOwner, ContactId) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try {
         const maxIdRow = await fetchFirst(db, maxIdQuery);
@@ -184,12 +194,7 @@ app.post("/createContact", async (req, res) => {
     }
 });
 
-const formatDate = () => {
-    const now = new Date();
-    const pad = (n) => n.toString().padStart(2, '0');
 
-    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-}
 
 app.post("/createChat", async (req, res) => {
     const contact = req.body;
@@ -197,14 +202,13 @@ app.post("/createChat", async (req, res) => {
     const creationDate = formatDate();
 
     const chat = {
-        ChatName : contact.ContactName,
         CreationDate :  creationDate,
         Archived : 0,
         ContactId : contact.ContactId
     };
 
     const maxIdQuery = "SELECT max(ChatId) as maxId FROM Chat";
-    const addMessageQuery = "INSERT INTO Chat (ChatName, CreationDate, Archived, ContactId, ChatId) VALUES (?, ?, ?, ?, ?)";
+    const addChatQuery = "INSERT INTO Chat (CreationDate, Archived, ContactId, ChatId) VALUES (?, ?, ?, ?)";
 
     try {
         const maxIdRow = await fetchFirst(db, maxIdQuery);
@@ -212,7 +216,7 @@ app.post("/createChat", async (req, res) => {
         chat.ChatId = nextId;
 
         const values = Object.values(chat);
-        await execute(db, addMessageQuery, values);
+        await execute(db, addChatQuery, values);
         res.json({ message: "Successfully added chat" });
     } catch (err) {
         console.error("Errore durante inserimento chat:", err);

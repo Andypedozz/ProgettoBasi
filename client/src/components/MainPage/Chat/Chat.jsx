@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import TextBar from './TextBar';
 
-export default function Chat({ chat, type }) {
+export default function Chat(props) {
+    const chat = props.chat;
+    const type = props.type;
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
