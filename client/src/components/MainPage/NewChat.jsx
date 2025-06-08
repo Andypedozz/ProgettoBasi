@@ -2,25 +2,28 @@ import { getAvatar, getLabel } from "../utils";
 
 export default function NewChat(props) {
 
+    const implemented = "false";
     const contacts = props.contacts;
 
     const createNewChat = (e) => {
 
-        const contactName = e.target.innerText.trim();
-        const contact = contacts.find(item => item.ContactName === contactName);
-        console.log(contactName)
-
-        fetch("/api/createChat", {
-            method: "POST",
-            headers : {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify(contact)
-        })
-        .then(response => response.json())
-        .then(data => {
+        if(implemented) {
+            const contactName = e.target.innerText.trim();
+            const contact = contacts.find(item => item.ContactName === contactName);
+            console.log(contactName)
             
-        })
+            fetch("/api/createChat", {
+                method: "POST",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify(contact)
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+            })
+        }
     }
 
     return (
