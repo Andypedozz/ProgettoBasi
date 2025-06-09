@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Percorso al file .sql
-const sqlFilePath = path.join(__dirname, 'DML-Queries.sql');
+const sqlFilePath = path.join(__dirname, 'INSERT-Queries.sql');
 
 // Leggi il contenuto del file
 const sql = fs.readFileSync(sqlFilePath, 'utf8');
