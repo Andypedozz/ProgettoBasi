@@ -5,7 +5,7 @@ export default function TextBar(props) {
     const chat = props.chat;
     const type = props.type;
     const messages = props.messages;
-    const setMessages = props.messages;
+    const setMessages = props.setMessages;
 
     const [text, setText] = useState('');
 
