@@ -37,7 +37,7 @@ export default function Login(props) {
             Username : username,
             Name : name,
             Surname : surname,
-            Number : phone
+            PhoneNumber : phone
         };
 
         fetch("/api/signup", {

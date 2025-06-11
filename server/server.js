@@ -159,14 +159,34 @@ app.post("/addMessage", async (req, res) => {
     }
 });
 
+// POST: Set the current logged user
+app.post("/login", async (req, res) => {
+    
+    const username = req.body.username;
+    const usersQuery = "SELECT * FROM User WHERE Username = ?";
+    
+    try{
+        const user = await fetchFirst(db, usersQuery, [username]);
+        if(user) {
+            req.session.user = user;
+            return res.json(user);
+        }else{
+            res.status(404).json({ error: "Utente non trovato"});
+        }
+    }catch(err) {
+        return res.json({ error: err})
+    }
+});
+
 app.post("/signup", async (req, res) => {
 
     const user = req.body;
     const values = Object.values(user); 
-    const query = "INSERT INTO User (Username, Name, Surname, Number) VALUES (?,?,?,?)";
+    const query = "INSERT INTO User (Username, Name, Surname, PhoneNumber) VALUES (?,?,?,?)";
 
     try{
         await execute(db, query, values);
+        req.session.user = user;
         res.json(user);
     }catch(err) {
         console.error("Errore durante l'inserimento dell'utente: "+err);
@@ -232,24 +252,6 @@ app.post("/protocol/walk", (req, res) => {
     
 });
 
-// POST: Set the current logged user
-app.post("/login", async (req, res) => {
-    
-    const username = req.body.username;
-    const usersQuery = "SELECT * FROM User WHERE Username = ?";
-    
-    try{
-        const user = await fetchFirst(db, usersQuery, [username]);
-        if(user) {
-            req.session.user = user;
-            return res.json(user);
-        }else{
-            res.status(404).json({ error: "Utente non trovato"});
-        }
-    }catch(err) {
-        return res.json({ error: err})
-    }
-});
 
 
 app.post("/logout", (req, res) => {
